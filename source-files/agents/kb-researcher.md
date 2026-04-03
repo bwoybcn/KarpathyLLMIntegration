@@ -26,12 +26,22 @@ Read `wiki/_index.md` to understand what topics are already covered. If `_meta/l
 
 ### Step 2: Search Strategy
 
-For the given topic, construct multiple search queries to get broad coverage:
+Construct search queries based on the research type. If a date range is provided, append date operators (e.g. `after:2026-03-01 before:2026-03-31`) to each query.
 
+**Default mode (academic/web/any):**
 1. **Direct search**: The topic as stated
 2. **Academic search**: "topic + research paper OR survey OR review"
 3. **Tutorial search**: "topic + explained OR tutorial OR introduction"
 4. **Recent search**: "topic + 2025 OR 2026 OR latest OR recent"
+
+**News mode** (`type: news`):
+1. **Wire services**: "topic + site:reuters.com OR site:apnews.com"
+2. **Major outlets**: "topic + site:bbc.com OR site:theguardian.com OR site:nytimes.com"
+3. **Analysis**: "topic + analysis OR explainer OR timeline"
+4. **Alternative perspective**: "topic + opinion OR editorial OR commentary"
+5. **Local/specialist**: "topic + (domain-specific outlet if applicable)"
+
+For news, actively seek **multiple perspectives** on the same events. Ingesting only one outlet's coverage gives a biased wiki.
 
 Use WebSearch for each query. Aim for 10-20 candidate URLs across all queries.
 
@@ -101,12 +111,37 @@ Suggested next: Run /kb-compile to process these into the wiki.
 
 ## Source Quality Tiers
 
+### For academic/web/any/repos research:
+
 | Tier | Examples | Treatment |
 |------|----------|-----------|
 | **Tier 1** (always ingest) | Peer-reviewed papers, official docs, textbooks, surveys | Full ingestion |
 | **Tier 2** (usually ingest) | Established tech blogs (Lilian Weng, Jay Alammar, Distill.pub), Wikipedia | Full ingestion |
 | **Tier 3** (selective) | Medium posts, tutorials, Stack Overflow answers | Only if high-quality and fills a gap |
 | **Tier 4** (skip) | SEO content, link farms, AI-generated summaries, social media | Skip |
+
+### For news research:
+
+| Tier | Examples | Treatment |
+|------|----------|-----------|
+| **Tier 1** (always ingest) | Wire services (Reuters, AP, AFP), public broadcasters (BBC, NPR, PBS) | Full ingestion — factual baseline |
+| **Tier 2** (usually ingest) | Major broadsheets (Guardian, NYT, WaPo, FT), specialist press | Full ingestion — depth and analysis |
+| **Tier 3** (selective) | Regional outlets, opinion columns, magazine long-reads | Ingest if adds unique local perspective or analysis |
+| **Tier 4** (skip) | Tabloids, aggregators, social media posts, AI-generated news summaries | Skip unless it's the only source for a specific fact |
+
+**News-specific rules:**
+- Seek at least 2 different outlets for the same event to avoid single-source bias
+- Prefer original reporting over aggregated/rewritten articles
+- Date-check each article — skip if outside the requested date range
+- Flag opinion/editorial pieces clearly in the source summary frontmatter (`source_subtype: opinion`)
+
+## Event Deduplication (News Mode)
+
+When multiple articles cover the same event (e.g., 5 articles about the same press conference):
+- Ingest the **best 2-3** from different outlets, not all of them
+- Choose sources that offer: (1) factual detail, (2) context/analysis, (3) alternative perspective
+- In the source summary frontmatter, add `event: "Brief Event Description"` so the compiler can group them
+- The compiler should produce ONE consolidated event article with multiple perspectives, not 5 near-identical articles
 
 ## Rules
 
@@ -117,3 +152,5 @@ Suggested next: Run /kb-compile to process these into the wiki.
 5. **Respect the wiki** — check _index.md so you don't ingest sources that cover already-saturated topics
 6. **Be transparent** — report what you skipped and why
 7. **arXiv preference** — for academic topics, prefer arXiv papers via AlphaXiv over blog summaries
+8. **Multi-perspective** — for news topics, always ingest from at least 2 different outlets per major event
+9. **Date discipline** — if a date range was specified, skip all sources outside that range

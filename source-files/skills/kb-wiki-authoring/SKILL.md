@@ -27,6 +27,7 @@ A KB vault contains `_meta/compilation-state.json` and `raw/` at its root. The v
 | `concept` | `wiki/concepts/` | One article per concept/topic. The core of the wiki. |
 | `source-summary` | `wiki/sources/` | One per raw source. Summarizes and links to concepts. |
 | `category` | `wiki/categories/` | Groups related concepts. Links to all members. |
+| `timeline` | `wiki/concepts/` | Chronological event sequence. Used for news/events research. |
 
 ## Article Schema
 

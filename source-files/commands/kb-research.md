@@ -13,9 +13,12 @@ args:
     required: false
     default: "5"
   - name: type
-    description: "Preferred source type: any, academic, web, repos. Default any."
+    description: "Preferred source type: any, academic, web, repos, news. Default any."
     required: false
     default: "any"
+  - name: date_range
+    description: "Date range filter, e.g. '2026-03-01 to 2026-03-31' or 'last 7 days' or '2025'. Useful for news research."
+    required: false
 tags: [Knowledge Base, Research, Autonomous, Web Search]
 ---
 
@@ -44,6 +47,8 @@ Search the web for high-quality sources on a topic and ingest them into the vaul
      - `academic` — prefer arXiv papers, surveys, peer-reviewed work
      - `web` — prefer blog posts, tutorials, documentation
      - `repos` — prefer GitHub repos, code documentation
+     - `news` — prefer news outlets, use date-restricted searches, seek multiple perspectives
+   - Date range (`$date_range`): if provided, restrict searches to this period
 
 4. **The agent will**:
    a. Run multiple web searches with varied queries
@@ -73,11 +78,21 @@ Search the web for high-quality sources on a topic and ingest them into the vaul
 /kb-research "Rust async runtime internals" --type repos --max_sources 3
 ```
 
+```
+/kb-research "UK general election" --type news --date_range "2025-06-01 to 2025-07-31"
+```
+
+```
+/kb-research "OpenAI leadership changes" --type news --date_range "last 30 days"
+```
+
 ## Notes
 
 - Uses WebSearch to find candidates, then defuddle/AlphaXiv/WebFetch to extract content
 - Quality-first: skips paywalled, shallow, or duplicate content
 - Checks existing wiki to avoid redundant ingestion
 - For academic topics, prefers arXiv papers via AlphaXiv over blog summaries
+- For news topics, seeks multiple perspectives and creates timeline articles
+- Date ranges are passed to search queries (e.g. `after:2026-03-01 before:2026-03-31`)
 - Each research run typically takes 1-3 minutes depending on topic breadth
 - Use `$kb-source-ingestion` and `$alphaxiv-paper-lookup` skills for ingestion patterns

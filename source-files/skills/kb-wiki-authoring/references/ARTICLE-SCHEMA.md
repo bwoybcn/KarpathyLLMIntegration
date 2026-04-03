@@ -125,12 +125,65 @@ Brief description of what this category covers.
 - [[Subcategory 2]]
 ```
 
+## Timeline Article (for news/events research)
+
+```markdown
+---
+title: "Timeline: Topic Name"
+type: timeline
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+date_start: YYYY-MM-DD
+date_end: YYYY-MM-DD
+sources: ["raw/web/source1.md", "raw/web/source2.md"]
+tags: [timeline, topic-tag]
+category: "[[Category Name]]"
+---
+
+# Timeline: Topic Name
+
+Brief overview of the events covered and their significance.
+
+## Timeline
+
+### YYYY-MM-DD — Event Title
+Summary of what happened. Multiple sources may cover this event from different angles.
+- From [[Source: Outlet A]]: factual detail
+- From [[Source: Outlet B]]: additional context or differing perspective
+
+### YYYY-MM-DD — Next Event
+Summary with source attribution.
+
+## Key Actors
+
+- **Person/Org A** — role in events, linked to [[Concept]] if applicable
+- **Person/Org B** — role in events
+
+## Analysis and Context
+
+Broader context that helps understand the timeline. What led to these events, what are the implications.
+
+## Conflicting Accounts
+
+- [[Source: Outlet A]] reports X, while [[Source: Outlet B]] reports Y
+- Reason for discrepancy if known
+
+## Open Questions
+
+- Unresolved aspects of the story
+```
+
+**When to create a timeline vs concept article:**
+- Use `timeline` when the topic is a sequence of events with dates (news stories, incidents, policy changes)
+- Use `concept` when the topic is a persistent idea, technology, or entity
+- A timeline can link to concept articles for background context
+
 ## Frontmatter Field Reference
 
 | Field | Required | Types | Description |
 |-------|----------|-------|-------------|
 | `title` | Yes | all | Display name, matches `# H1` heading |
-| `type` | Yes | all | `concept`, `source-summary`, or `category` |
+| `type` | Yes | all | `concept`, `source-summary`, `category`, or `timeline` |
 | `created` | Yes | all | Date first created (YYYY-MM-DD) |
 | `updated` | Yes | all | Date last modified (YYYY-MM-DD) |
 | `sources` | Yes | concept | List of raw/ file paths that inform this article |
@@ -145,3 +198,7 @@ Brief description of what this category covers.
 | `date_published` | No | source-summary | When the source was published |
 | `date_ingested` | Yes | source-summary | When it was added to raw/ |
 | `parent_category` | No | category | Wikilink to parent category |
+| `date_start` | Yes | timeline | Start date of the timeline period |
+| `date_end` | Yes | timeline | End date of the timeline period |
+| `event` | No | source-summary | Event name for grouping news sources about the same event |
+| `source_subtype` | No | source-summary | `opinion`, `editorial`, `analysis`, `report` for news sources |
