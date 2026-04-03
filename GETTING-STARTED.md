@@ -38,6 +38,14 @@ This autonomously searches the web, evaluates candidate sources for quality and 
 /kb-research "attention mechanisms" --type academic
 ```
 
+For news topics, use `--type news` with a date range:
+
+```
+/kb-research "UK general election" --type news --date_range "2025-06-01 to 2025-07-31"
+```
+
+This uses news-specific search strategies (wire services, major outlets, analysis pieces), enforces multi-perspective sourcing (at least 2 outlets per event), and creates timeline articles for chronological event sequences.
+
 ### 3b. Or manually ingest specific sources
 
 ```

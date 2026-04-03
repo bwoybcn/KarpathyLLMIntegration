@@ -19,7 +19,7 @@ Each knowledge base is a standalone Obsidian vault at `D:\KnowledgeBases\{topic}
 | Command | Description |
 |---------|-------------|
 | `/kb-new {topic}` | Create a new knowledge base vault |
-| `/kb-research {topic}` | Autonomously search the web, evaluate, and ingest sources |
+| `/kb-research {topic}` | Autonomously search the web, evaluate, and ingest sources. Supports `--type news` and `--date_range` |
 | `/kb-ingest {url\|path}` | Manually ingest a specific source |
 | `/kb-compile` | Compile raw sources into wiki articles with wikilinks |
 | `/kb-query {question}` | Ask a question against the wiki |
@@ -88,6 +88,8 @@ D:\KnowledgeBases\{topic}\
 - **Never delete** — merges add information, contradictions are preserved with attribution
 - **Everything linked** — `[[wikilinks]]` throughout, viewable in Obsidian's graph view
 - **Explorations add up** — query outputs can be filed back into the wiki
+- **Works for any topic** — academic research, news stories, technical docs, general knowledge
+- **News-aware** — date range filtering, timeline articles, multi-perspective sourcing, event deduplication
 
 ## File Locations
 
