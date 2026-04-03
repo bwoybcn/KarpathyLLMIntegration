@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM Knowledge Base System — User Manual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --ink: #1a1a2e;
+    --paper: #faf9f6;
+    --accent: #c45d3e;
+    --accent-light: #f0d5cc;
+    --sage: #5a7a6a;
+    --sage-light: #e8f0ec;
+    --warm-gray: #8a8578;
+    --light-line: #e8e4de;
+    --code-bg: #2d2d3a;
+    --code-fg: #e8e6e3;
+    --highlight: #fff3cd;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page {
+    size: A4;
+    margin: 2cm 2.5cm;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11pt;
+    line-height: 1.7;
+    color: var(--ink);
+    background: var(--paper);
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 60px;
+  }
+
+  /* Cover Page */
+  .cover {
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    page-break-after: always;
+    position: relative;
+    padding: 60px 0;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -60px;
+    width: 8px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--accent), var(--sage));
+    border-radius: 4px;
+  }
+
+  .cover-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    display: inline-block;
+  }
+
+  .cover h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 42pt;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+  }
+
+  .cover h1 span {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .cover-subtitle {
+    font-size: 14pt;
+    color: var(--warm-gray);
+    font-weight: 400;
+    margin-bottom: 50px;
+    max-width: 480px;
+    line-height: 1.6;
+  }
+
+  .cover-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5pt;
+    color: var(--warm-gray);
+    line-height: 2;
+  }
+
+  .cover-meta strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .cover-diagram {
+    margin-top: 50px;
+    padding: 24px 28px;
+    background: var(--code-bg);
+    color: var(--code-fg);
+    border-radius: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    line-height: 1.8;
+    width: 100%;
+    white-space: pre;
+  }
+
+  .cover-diagram .accent { color: var(--accent); }
+  .cover-diagram .sage { color: #8bc6a8; }
+  .cover-diagram .dim { color: #6b6b7b; }
+
+  /* Section Headers */
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 22pt;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: 50px;
+    margin-bottom: 8px;
+    page-break-after: avoid;
+  }
+
+  h2 .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11pt;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 4px;
+    letter-spacing: 2px;
+  }
+
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 14pt;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: 30px;
+    margin-bottom: 8px;
+    page-break-after: avoid;
+  }
+
+  h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11pt;
+    font-weight: 600;
+    color: var(--sage);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 24px;
+    margin-bottom: 8px;
+  }
+
+  .section-intro {
+    font-size: 12pt;
+    color: var(--warm-gray);
+    margin-bottom: 24px;
+    border-left: 3px solid var(--accent-light);
+    padding-left: 16px;
+  }
+
+  hr.section-break {
+    border: none;
+    height: 1px;
+    background: var(--light-line);
+    margin: 40px 0;
+  }
+
+  /* Paragraphs and text */
+  p {
+    margin-bottom: 12px;
+  }
+
+  strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* Code */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5pt;
+    background: var(--sage-light);
+    color: var(--sage);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  pre {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    line-height: 1.7;
+    padding: 18px 22px;
+    border-radius: 10px;
+    margin: 16px 0;
+    overflow-x: auto;
+    page-break-inside: avoid;
+  }
+
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 10pt;
+    page-break-inside: avoid;
+  }
+
+  thead th {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 8.5pt;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--warm-gray);
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--light-line);
+    vertical-align: top;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Callout boxes */
+  .callout {
+    padding: 18px 22px;
+    border-radius: 10px;
+    margin: 20px 0;
+    page-break-inside: avoid;
+  }
+
+  .callout-tip {
+    background: var(--sage-light);
+    border-left: 4px solid var(--sage);
+  }
+
+  .callout-warn {
+    background: var(--highlight);
+    border-left: 4px solid #d4a017;
+  }
+
+  .callout-example {
+    background: #f3f0fa;
+    border-left: 4px solid #7c5cbf;
+  }
+
+  .callout-title {
+    font-weight: 600;
+    font-size: 10pt;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .callout p {
+    margin-bottom: 4px;
+    font-size: 10pt;
+  }
+
+  /* Lists */
+  ul, ol {
+    padding-left: 22px;
+    margin-bottom: 12px;
+  }
+
+  li {
+    margin-bottom: 6px;
+  }
+
+  /* Step lists */
+  .steps {
+    list-style: none;
+    padding-left: 0;
+    counter-reset: step;
+  }
+
+  .steps li {
+    counter-increment: step;
+    padding-left: 44px;
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 13pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .steps li strong {
+    display: block;
+    font-size: 11pt;
+    margin-bottom: 4px;
+  }
+
+  /* Vault tree */
+  .tree {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    line-height: 1.8;
+    background: var(--paper);
+    border: 1px solid var(--light-line);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin: 16px 0;
+  }
+
+  .tree .folder { color: var(--accent); font-weight: 500; }
+  .tree .file { color: var(--warm-gray); }
+  .tree .comment { color: var(--sage); font-style: italic; }
+
+  /* Command reference cards */
+  .cmd-card {
+    border: 1px solid var(--light-line);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 12px 0;
+    page-break-inside: avoid;
+  }
+
+  .cmd-card-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12pt;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .cmd-card-desc {
+    color: var(--warm-gray);
+    font-size: 10pt;
+    margin-bottom: 8px;
+  }
+
+  .cmd-card-example {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    color: var(--sage);
+    background: var(--sage-light);
+    padding: 8px 14px;
+    border-radius: 6px;
+  }
+
+  /* Flow diagram */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+    justify-content: center;
+  }
+
+  .flow-step {
+    background: var(--sage-light);
+    color: var(--sage);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+
+  .flow-step.accent {
+    background: var(--accent);
+    color: white;
+  }
+
+  .flow-arrow {
+    color: var(--light-line);
+    font-size: 16pt;
+  }
+
+  /* Page breaks */
+  .page-break {
+    page-break-before: always;
+  }
+
+  /* Footer */
+  .manual-footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--light-line);
+    font-size: 9pt;
+    color: var(--warm-gray);
+    text-align: center;
+  }
+
+  /* Print adjustments */
+  @media print {
+    body { padding: 0; max-width: none; }
+    .cover { min-height: auto; padding: 80px 0; }
+    .cover::before { display: none; }
+    pre, .tree, .cmd-card, .callout { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="cover">
+  <div class="cover-badge">User Manual v1.0</div>
+  <h1>LLM Knowledge<br><span>Base System</span></h1>
+  <p class="cover-subtitle">Build personal knowledge bases using AI. Raw sources go in, a structured wiki comes out — viewable in Obsidian, queryable by AI, and growing over time.</p>
+
+  <div class="cover-diagram"><span class="dim">Your sources</span>       <span class="accent">/kb-research</span>       <span class="dim">Structured wiki</span>
+<span class="dim">articles</span>    ──→   <span class="accent">/kb-ingest</span>    ──→   <span class="sage">raw/</span>
+<span class="dim">papers</span>           <span class="accent">/kb-compile</span>         <span class="sage">wiki/</span>    ──→  <span class="dim">Obsidian</span>
+<span class="dim">repos</span>            <span class="accent">/kb-query</span>           <span class="sage">outputs/</span>
+<span class="dim">notes</span>            <span class="accent">/kb-lint</span>
+                 <span class="accent">/kb-expand</span>    <span class="dim">←── auto-fills gaps</span></div>
+
+  <div class="cover-meta">
+    <strong>Built for</strong> Claude Code + Obsidian<br>
+    <strong>Inspired by</strong> Andrej Karpathy's LLM knowledge base workflow<br>
+    <strong>Repository</strong> github.com/bwoybcn/KarpathyLLMIntegration
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<h2><span class="num">00</span>Contents</h2>
+<table>
+  <tbody>
+    <tr><td><strong>01</strong></td><td>What Is This?</td></tr>
+    <tr><td><strong>02</strong></td><td>Quick Start (5 minutes)</td></tr>
+    <tr><td><strong>03</strong></td><td>The Core Loop</td></tr>
+    <tr><td><strong>04</strong></td><td>Command Reference</td></tr>
+    <tr><td><strong>05</strong></td><td>Vault Structure</td></tr>
+    <tr><td><strong>06</strong></td><td>Working with News &amp; General Topics</td></tr>
+    <tr><td><strong>07</strong></td><td>Tips &amp; Patterns</td></tr>
+    <tr><td><strong>08</strong></td><td>Installation</td></tr>
+    <tr><td><strong>09</strong></td><td>Troubleshooting</td></tr>
+  </tbody>
+</table>
+
+<!-- SECTION 1 -->
+<div class="page-break"></div>
+<h2><span class="num">01</span>What Is This?</h2>
+<p class="section-intro">A system that turns scattered sources into structured, interconnected knowledge — automatically.</p>
+
+<p>Imagine you're researching a topic. You find a dozen articles, a few papers, some GitHub repos. Normally you'd read them, take some notes, and eventually forget half of what you learned.</p>
+
+<p>This system does something different. You point it at your sources — or tell it to <em>find</em> sources — and it:</p>
+
+<ol>
+  <li><strong>Ingests</strong> them into a structured folder</li>
+  <li><strong>Compiles</strong> them into a wiki of interconnected articles, each with cross-references (wikilinks)</li>
+  <li><strong>Answers questions</strong> by researching across the wiki and citing its sources</li>
+  <li><strong>Finds gaps</strong> in your knowledge and suggests (or fetches) sources to fill them</li>
+  <li><strong>Grows over time</strong> — your queries and explorations feed back into the wiki</li>
+</ol>
+
+<p>Everything lives in an <strong>Obsidian vault</strong> — a folder of markdown files you can browse, search, and visualize with Obsidian's graph view.</p>
+
+<div class="callout callout-tip">
+  <div class="callout-title">Key Idea</div>
+  <p>The AI writes and maintains the wiki. You rarely edit it directly. Instead, you ingest sources, ask questions, and let the system build your knowledge base.</p>
+</div>
+
+<h3>What it works for</h3>
+<table>
+  <thead><tr><th>Use Case</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>Academic research</td><td>Build a wiki on transformer architectures from papers and blog posts</td></tr>
+    <tr><td>News tracking</td><td>Research a political event across multiple outlets with date filtering</td></tr>
+    <tr><td>Technical learning</td><td>Compile documentation and tutorials into a structured reference</td></tr>
+    <tr><td>Project research</td><td>Gather competitive analysis, market reports, and internal docs</td></tr>
+    <tr><td>Personal knowledge</td><td>Organize notes and bookmarks into a searchable wiki</td></tr>
+  </tbody>
+</table>
+
+<!-- SECTION 2 -->
+<div class="page-break"></div>
+<h2><span class="num">02</span>Quick Start</h2>
+<p class="section-intro">From zero to a working knowledge base in five steps.</p>
+
+<ol class="steps">
+  <li>
+    <strong>Create a vault</strong>
+    <p>Open Claude Code and type:</p>
+    <pre><code>/kb-new "Transformer Architecture"</code></pre>
+    <p>This creates a pre-configured Obsidian vault at <code>D:\KnowledgeBases\transformer-architecture\</code>.</p>
+  </li>
+  <li>
+    <strong>Let the AI find sources</strong>
+    <pre><code>/kb-research "transformer architecture and attention mechanisms"</code></pre>
+    <p>The system searches the web, evaluates candidates for quality, and ingests the best 3-8 sources into your vault. This takes 1-3 minutes.</p>
+  </li>
+  <li>
+    <strong>Compile the wiki</strong>
+    <pre><code>/kb-compile</code></pre>
+    <p>Each source is processed one at a time. The AI extracts concepts, creates articles with <code>[[wikilinks]]</code>, and builds an index.</p>
+  </li>
+  <li>
+    <strong>Ask a question</strong>
+    <pre><code>/kb-query "How does multi-head attention work?"</code></pre>
+    <p>The AI reads relevant wiki articles and gives you an answer with citations.</p>
+  </li>
+  <li>
+    <strong>Open in Obsidian</strong>
+    <p>Open Obsidian, click "Open folder as vault", and select your vault folder. Enable the community plugins when prompted. Explore the graph view to see how concepts connect.</p>
+  </li>
+</ol>
+
+<div class="callout callout-tip">
+  <div class="callout-title">That's it.</div>
+  <p>You now have a structured knowledge base. Run <code>/kb-expand</code> to automatically find and fill gaps, or <code>/kb-research</code> again with different subtopics to grow it further.</p>
+</div>
+
+<!-- SECTION 3 -->
+<div class="page-break"></div>
+<h2><span class="num">03</span>The Core Loop</h2>
+<p class="section-intro">The system is built around a self-reinforcing cycle.</p>
+
+<div class="flow">
+  <div class="flow-step accent">/kb-research</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-step">/kb-ingest</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-step">raw/</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-step accent">/kb-compile</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-step">wiki/</div>
+</div>
+<div class="flow">
+  <div class="flow-step">/kb-query</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-step">answers</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-step">filed back</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-step accent">/kb-lint</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-step accent">/kb-expand</div>
+</div>
+
+<h3>Each stage explained</h3>
+
+<p><strong>Research &amp; Ingest</strong> — Sources enter the system. Either the AI finds them autonomously (<code>/kb-research</code>) or you point it at specific URLs/files (<code>/kb-ingest</code>). Sources are saved as markdown in <code>raw/</code>.</p>
+
+<p><strong>Compile</strong> — The AI reads each source, extracts key concepts, and writes structured wiki articles. If a concept already exists, it merges new information without deleting anything. Every claim is attributed to its source.</p>
+
+<p><strong>Query</strong> — Ask questions against the wiki. The AI reads the index, identifies relevant articles, and synthesizes answers with <code>[[wikilink]]</code> citations. Answers can be saved back into the wiki.</p>
+
+<p><strong>Lint</strong> — Health checks find broken links, missing cross-references, contradictions, and gaps. The system suggests what to research next.</p>
+
+<p><strong>Expand</strong> — Reads the lint report and autonomously researches sources to fill the gaps. The wiki grows itself.</p>
+
+<div class="callout callout-example">
+  <div class="callout-title">The Karpathy Principle</div>
+  <p>"Your own explorations and queries always add up in the knowledge base." Every question you ask and every answer you get can be filed back, making the wiki richer for next time.</p>
+</div>
+
+<!-- SECTION 4 -->
+<div class="page-break"></div>
+<h2><span class="num">04</span>Command Reference</h2>
+<p class="section-intro">All commands are typed in Claude Code's prompt.</p>
+
+<div class="cmd-card">
+  <div class="cmd-card-name">/kb-new {topic}</div>
+  <div class="cmd-card-desc">Create a new knowledge base vault with pre-configured Obsidian settings.</div>
+  <div class="cmd-card-example">/kb-new "Machine Learning Fundamentals"</div>
+</div>
+
+<div class="cmd-card">
+  <div class="cmd-card-name">/kb-research {topic}</div>
+  <div class="cmd-card-desc">Autonomously search the web, evaluate source quality, and ingest the best ones. Supports <code>--type</code> (any, academic, web, repos, news) and <code>--date_range</code>.</div>
+  <div class="cmd-card-example">/kb-research "attention mechanisms" --type academic</div>
+</div>
+
+<div class="cmd-card">
+  <div class="cmd-card-name">/kb-ingest {url | path}</div>
+  <div class="cmd-card-desc">Manually ingest a specific source — a URL, PDF, arXiv paper, GitHub repo, or markdown file.</div>
+  <div class="cmd-card-example">/kb-ingest https://arxiv.org/abs/1706.03762</div>
+</div>
+
+<div class="cmd-card">
+  <div class="cmd-card-name">/kb-compile</div>
+  <div class="cmd-card-desc">Compile new or modified raw sources into wiki articles with wikilinks and concept extraction.</div>
+  <div class="cmd-card-example">/kb-compile</div>
+</div>
+
+<div class="cmd-card">
+  <div class="cmd-card-name">/kb-query {question}</div>
+  <div class="cmd-card-desc">Ask a question against the wiki. The AI researches the answer across articles and cites sources.</div>
+  <div class="cmd-card-example">/kb-query "What are the trade-offs between CNN and transformer architectures?"</div>
+</div>
+
+<div class="cmd-card">
+  <div class="cmd-card-name">/kb-lint</div>
+  <div class="cmd-card-desc">Run health checks: broken links, missing cross-references, inconsistencies, and data gap suggestions.</div>
+  <div class="cmd-card-example">/kb-lint</div>
+</div>
+
+<div class="cmd-card">
+  <div class="cmd-card-name">/kb-expand</div>
+  <div class="cmd-card-desc">Auto-identify knowledge gaps and research sources to fill them. Combines lint &rarr; research &rarr; compile.</div>
+  <div class="cmd-card-example">/kb-expand --max_sources 5</div>
+</div>
+
+<div class="cmd-card">
+  <div class="cmd-card-name">/kb-status</div>
+  <div class="cmd-card-desc">Show vault statistics: article count, word count, uncompiled sources, broken links.</div>
+  <div class="cmd-card-example">/kb-status</div>
+</div>
+
+<div class="cmd-card">
+  <div class="cmd-card-name">/kb-output {format}</div>
+  <div class="cmd-card-desc">Generate outputs from wiki content. Formats: <code>slides</code> (Marp), <code>report</code>, <code>chart</code>, <code>summary</code>.</div>
+  <div class="cmd-card-example">/kb-output slides "Overview of Attention Mechanisms"</div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="page-break"></div>
+<h2><span class="num">05</span>Vault Structure</h2>
+<p class="section-intro">Each knowledge base is a folder of markdown files — simple, portable, and human-readable.</p>
+
+<div class="tree"><span class="folder">D:\KnowledgeBases\your-topic\</span>
+├── <span class="folder">raw/</span>                     <span class="comment">← Source documents go here</span>
+│   ├── <span class="folder">web/</span>                 <span class="comment">← Web articles</span>
+│   ├── <span class="folder">papers/</span>              <span class="comment">← PDFs, arXiv papers</span>
+│   ├── <span class="folder">repos/</span>               <span class="comment">← GitHub repo docs</span>
+│   └── <span class="folder">notes/</span>               <span class="comment">← Your own notes</span>
+│
+├── <span class="folder">wiki/</span>                    <span class="comment">← AI-compiled knowledge</span>
+│   ├── <span class="folder">concepts/</span>            <span class="comment">← One article per concept</span>
+│   ├── <span class="folder">sources/</span>             <span class="comment">← Summary of each source</span>
+│   ├── <span class="folder">categories/</span>          <span class="comment">← Topic groupings</span>
+│   ├── <span class="file">_index.md</span>            <span class="comment">← Master article list</span>
+│   ├── <span class="file">_categories.md</span>       <span class="comment">← Category tree</span>
+│   ├── <span class="file">_glossary.md</span>         <span class="comment">← Term definitions</span>
+│   └── <span class="file">_backlinks.md</span>        <span class="comment">← Reverse link index</span>
+│
+├── <span class="folder">outputs/</span>                 <span class="comment">← Generated deliverables</span>
+│   ├── <span class="folder">reports/</span>
+│   ├── <span class="folder">slides/</span>              <span class="comment">← Marp slide decks</span>
+│   └── <span class="folder">charts/</span>              <span class="comment">← Matplotlib images</span>
+│
+├── <span class="folder">_meta/</span>                   <span class="comment">← System state</span>
+│   ├── <span class="file">compilation-state.json</span>
+│   ├── <span class="file">stats.md</span>
+│   └── <span class="file">lint-report.md</span>
+│
+├── <span class="file">AGENTS.md</span>                <span class="comment">← Rules for AI behavior</span>
+└── <span class="folder">.obsidian/</span>               <span class="comment">← Obsidian config</span></div>
+
+<h3>How articles are structured</h3>
+<p>Every wiki article follows a consistent format with YAML frontmatter (metadata at the top) and structured sections:</p>
+
+<pre><code>---
+title: "Attention Mechanism"
+type: concept
+sources: ["raw/papers/vaswani-2017.md"]
+category: "[[Neural Networks]]"
+confidence: high
+---
+
+# Attention Mechanism
+
+Summary paragraph.
+
+## Overview
+Explanation with [[wikilinks]] to related concepts.
+
+## Evidence and Sources
+- From [[Source: Vaswani 2017]]: specific finding
+
+## Related Concepts
+- [[Transformer Architecture]] — builds on this
+- [[Self-Attention]] — a specific variant</code></pre>
+
+<p>The <code>[[wikilinks]]</code> are what make everything connected. Click them in Obsidian to navigate between concepts, or view the graph to see the full network.</p>
+
+<!-- SECTION 6 -->
+<div class="page-break"></div>
+<h2><span class="num">06</span>News &amp; General Topics</h2>
+<p class="section-intro">The system isn't just for academic research — it handles news stories, current events, and general topics too.</p>
+
+<h3>Date-filtered news research</h3>
+<pre><code>/kb-research "UK general election" --type news --date_range "2025-06-01 to 2025-07-31"</code></pre>
+
+<p>When you use <code>--type news</code>, the system changes its behavior:</p>
+
+<ul>
+  <li><strong>Different search strategy</strong> — targets wire services (Reuters, AP), major outlets (BBC, Guardian, NYT), analysis pieces, and alternative perspectives</li>
+  <li><strong>Multi-perspective requirement</strong> — ingests at least 2 different outlets per major event to avoid single-source bias</li>
+  <li><strong>Date discipline</strong> — skips articles outside the requested date range</li>
+  <li><strong>Event deduplication</strong> — if 5 articles cover the same press conference, it picks the best 2-3 from different outlets</li>
+  <li><strong>Timeline articles</strong> — creates chronological event sequences instead of static concept articles</li>
+</ul>
+
+<h3>Timeline articles</h3>
+<p>For news topics, the compiler creates <strong>timeline</strong> articles that show events in chronological order with multiple perspectives:</p>
+
+<pre><code>---
+title: "Timeline: UK Election Campaign"
+type: timeline
+date_start: 2025-06-01
+date_end: 2025-07-04
+---
+
+# Timeline: UK Election Campaign
+
+## 2025-06-12 — Manifesto Launches
+- From [[Source: BBC]]: Labour pledges...
+- From [[Source: Guardian]]: Conservative response...
+
+## 2025-06-18 — Leaders' Debate
+- From [[Source: Reuters]]: Key moments...
+
+## Conflicting Accounts
+- Source A reports X, Source B reports Y</code></pre>
+
+<h3>Source quality tiers for news</h3>
+<table>
+  <thead><tr><th>Tier</th><th>Examples</th><th>Treatment</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Tier 1</strong></td><td>Reuters, AP, BBC, NPR</td><td>Always ingested — factual baseline</td></tr>
+    <tr><td><strong>Tier 2</strong></td><td>Guardian, NYT, FT, specialist press</td><td>Usually ingested — depth and analysis</td></tr>
+    <tr><td><strong>Tier 3</strong></td><td>Regional outlets, opinion columns</td><td>Selective — only if unique perspective</td></tr>
+    <tr><td><strong>Tier 4</strong></td><td>Tabloids, aggregators, AI summaries</td><td>Skipped</td></tr>
+  </tbody>
+</table>
+
+<!-- SECTION 7 -->
+<div class="page-break"></div>
+<h2><span class="num">07</span>Tips &amp; Patterns</h2>
+<p class="section-intro">Get the most out of the system with these workflows.</p>
+
+<h3>The "hands-off" workflow</h3>
+<pre><code>/kb-new "Your Topic"
+/kb-research "your topic" --max_sources 8
+/kb-compile
+/kb-expand
+/kb-status</code></pre>
+<p>Four commands and you have a structured wiki. Run <code>/kb-expand</code> again periodically to keep it growing.</p>
+
+<h3>File query answers back</h3>
+<p>After <code>/kb-query</code>, you can ask to save the answer into the wiki. This means your own investigations make the knowledge base richer — exactly Karpathy's "explorations add up" principle.</p>
+
+<h3>Use the Obsidian graph view</h3>
+<p>The vault is pre-configured with color-coded graph view:</p>
+<ul>
+  <li><strong style="color: #4a90d9;">Blue</strong> — concept articles</li>
+  <li><strong style="color: #5a7a6a;">Green</strong> — source summaries</li>
+  <li><strong style="color: #d4a017;">Orange</strong> — categories</li>
+  <li><strong style="color: #888;">Gray</strong> — raw sources</li>
+  <li><strong style="color: #7c5cbf;">Purple</strong> — outputs</li>
+</ul>
+
+<h3>Multiple vaults for different topics</h3>
+<p>Each <code>/kb-new</code> creates a separate Obsidian vault. Keep topics isolated — a vault on "Machine Learning" and another on "Climate Policy" work independently.</p>
+
+<h3>Ingest from different source types</h3>
+<table>
+  <thead><tr><th>You give it</th><th>What happens</th></tr></thead>
+  <tbody>
+    <tr><td>A web URL</td><td>Extracted via Defuddle (clean markdown, no ads)</td></tr>
+    <tr><td>An arXiv URL or paper ID</td><td>Fetched from AlphaXiv (structured AI overview)</td></tr>
+    <tr><td>A PDF file path</td><td>Converted via MarkItDown MCP</td></tr>
+    <tr><td>A GitHub repo URL</td><td>README and key docs extracted</td></tr>
+    <tr><td>A markdown file</td><td>Copied directly into the vault</td></tr>
+    <tr><td>A Zotero item key</td><td>Paper metadata and full text pulled via Zotero</td></tr>
+  </tbody>
+</table>
+
+<!-- SECTION 8 -->
+<div class="page-break"></div>
+<h2><span class="num">08</span>Installation</h2>
+<p class="section-intro">What you need and how to set it up.</p>
+
+<h3>Requirements</h3>
+<table>
+  <thead><tr><th>Software</th><th>Purpose</th><th>Install</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Claude Code</strong></td><td>The AI engine</td><td>claude.ai/claude-code</td></tr>
+    <tr><td><strong>Obsidian</strong></td><td>Wiki viewer</td><td>obsidian.md</td></tr>
+    <tr><td><strong>Python 3.10+</strong></td><td>Backend script</td><td>python.org</td></tr>
+    <tr><td><strong>Node.js 18+</strong></td><td>Hook scripts</td><td>nodejs.org</td></tr>
+    <tr><td><strong>Defuddle CLI</strong></td><td>Web article extraction</td><td><code>npm install -g defuddle-cli</code></td></tr>
+  </tbody>
+</table>
+
+<h3>Install steps</h3>
+<ol>
+  <li>Clone the repository: <code>git clone https://github.com/bwoybcn/KarpathyLLMIntegration.git</code></li>
+  <li>Copy files from <code>source-files/</code> into your Claude Code home (<code>~/.claude/</code>)</li>
+  <li>Register the auto-compile hook in <code>~/.claude/settings.json</code></li>
+  <li>Optionally configure MarkItDown MCP (for PDFs) and Zotero MCP (for papers)</li>
+  <li>Set the <code>KB_ROOT</code> environment variable if you want vaults somewhere other than <code>D:\KnowledgeBases\</code></li>
+</ol>
+
+<div class="callout callout-tip">
+  <div class="callout-title">Full instructions</div>
+  <p>See <code>INSTALL.md</code> in the repository for detailed, step-by-step installation with platform-specific guidance for Windows, macOS, and Linux.</p>
+</div>
+
+<!-- SECTION 9 -->
+<h2><span class="num">09</span>Troubleshooting</h2>
+
+<table>
+  <thead><tr><th>Problem</th><th>Solution</th></tr></thead>
+  <tbody>
+    <tr><td>"Not inside a KB vault"</td><td>Either <code>cd</code> into a vault directory or specify <code>--vault name</code></td></tr>
+    <tr><td>Compilation seems slow</td><td>Sources are processed one at a time for quality. Large papers take longer.</td></tr>
+    <tr><td>Broken wikilinks after compile</td><td>Run <code>/kb-lint --fix true</code> to auto-create stub articles</td></tr>
+    <tr><td>Obsidian shows no plugins</td><td>Go to Settings &rarr; Community Plugins &rarr; Turn on, then install Dataview and Marp Slides</td></tr>
+    <tr><td>MarkItDown not working</td><td>Check it's configured in <code>~/.claude/settings.json</code> under <code>mcpServers</code></td></tr>
+    <tr><td>defuddle command not found</td><td>Run <code>npm install -g defuddle-cli</code></td></tr>
+  </tbody>
+</table>
+
+<div class="manual-footer">
+  LLM Knowledge Base System &mdash; github.com/bwoybcn/KarpathyLLMIntegration<br>
+  Built with Claude Code. Inspired by Andrej Karpathy.
+</div>
+
+</body>
+</html>
