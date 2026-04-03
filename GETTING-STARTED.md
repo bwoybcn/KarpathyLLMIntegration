@@ -188,6 +188,8 @@ If you have Zotero configured, you can ingest papers by Zotero item key:
 
 ## Troubleshooting
 
+**Dataview queries show as raw code** — Make sure Dataview is updated to the latest version. Go to Settings > Community plugins > Check for updates. Then switch to Reading view (Ctrl+E) to see rendered tables.
+
 **"Not inside a KB vault"** — Either `cd` into a vault directory or use `--vault` to specify one.
 
 **Compilation seems slow** — Sources are processed one at a time for merge quality. Large papers take longer.
