@@ -52,22 +52,26 @@ source_type: web | paper | repo | note
 author: "{author if known}"
 date_published: "{date if known}"
 date_ingested: "{from frontmatter or today}"
-tags: [source, {topic tags}]
+tags: [type/source, source-type/{web|paper|repo|note}, topic/{topic}]
 ---
 
 # Source: {Original Title}
 
-## Summary
-{2-3 paragraph summary}
+> [!abstract]
+> {2-3 paragraph summary}
 
 ## Key Claims
-- Claim with [[Concept Link]]
+
+> [!example] Key Findings
+> - Claim with [[Concept Link]]
 
 ## Concepts Mentioned
 - [[Concept Name]] — how this source relates
 
 ## Notable Quotes and Data
-- Key data points or quotes
+
+> [!quote]
+> Key data points or quotes
 ```
 
 ### Step 3: Create or Merge Concept Articles
@@ -83,7 +87,7 @@ type: concept
 created: {today}
 updated: {today}
 sources: ["{raw source path}"]
-tags: [{relevant tags}]
+tags: [type/concept, confidence/{high|medium|low}, topic/{topic}]
 category: "[[{Category Name}]]"
 aliases: [{alternative names if any}]
 confidence: {high|medium|low based on source quality}
@@ -91,13 +95,16 @@ confidence: {high|medium|low based on source quality}
 
 # {Concept Name}
 
-{One-paragraph summary}
+> [!abstract]
+> {One-paragraph summary}
 
 ## Overview
 {Explanation with [[wikilinks]]}
 
 ## Key Points
-- Point with [[links]]
+
+> [!example] Key Findings
+> - Point with [[links]]
 
 ## Evidence and Sources
 - From [[Source: {title}]]: {specific finding}
@@ -105,8 +112,11 @@ confidence: {high|medium|low based on source quality}
 ## Related Concepts
 - [[Other Concept]] — {relationship}
 
-## Open Questions
-- {Uncertainties}
+> [!question] Open Questions
+> - {Uncertainties}
+
+## See Also
+![[Other Concept#Overview]]
 ```
 
 **If the concept article DOES exist** — perform a merge:
@@ -136,3 +146,6 @@ For each category referenced:
 7. **Handle contradictions** — keep both claims with attribution, note in Open Questions
 8. **Be concise** — summaries under 150 chars for index entries
 9. **Inline YAML lists** — always write frontmatter lists in inline format: `tags: [a, b]`, `sources: ["path1", "path2"]`, `aliases: ["Name A"]`. Do not use multi-line `- item` list syntax in frontmatter.
+10. **Obsidian callouts** — use `> [!abstract]` for summaries, `> [!example]` for key findings, `> [!question]` for open questions, `> [!warning]` for contradictions, `> [!quote]` for notable quotes
+11. **Structured tags** — always include `type/{type}` tag; add `confidence/{level}` for concepts, `source-type/{type}` for sources, and `topic/{topic}` for domain tags
+12. **Embeds** — add a `## See Also` section with `![[Concept#Overview]]` embeds (2-3 max) for related concepts

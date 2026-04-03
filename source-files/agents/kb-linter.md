@@ -45,6 +45,12 @@ Given a KB vault path, you perform deep analysis to:
 - Are filenames consistent with titles?
 - Are there very short articles that should be expanded or merged?
 
+### 6. Obsidian Formatting
+- Do articles use `> [!abstract]` callouts for summaries?
+- Do articles use `> [!question]` for open questions and `> [!warning]` for contradictions?
+- Do tags follow the structured taxonomy (`type/`, `confidence/`, `source-type/`, `topic/`)?
+- Do concept articles have a `## See Also` section with embeds?
+
 ## Process
 
 1. Read `wiki/_index.md` for the full article inventory

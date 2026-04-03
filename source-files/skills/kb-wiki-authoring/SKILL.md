@@ -76,10 +76,41 @@ After any article changes, these index files MUST be updated:
 
 The `kb_engine.py rebuild-index` script handles `_index.md` automatically. The LLM should update the others during compilation.
 
+## Tag Taxonomy
+
+Use hierarchical tags with `/` prefixes for structured filtering in Obsidian's tag pane:
+
+| Prefix | Examples | Applied to |
+|--------|----------|-----------|
+| `#type/` | `#type/concept`, `#type/source`, `#type/timeline`, `#type/category` | All articles (auto) |
+| `#confidence/` | `#confidence/high`, `#confidence/medium`, `#confidence/low` | Concept articles |
+| `#source-type/` | `#source-type/paper`, `#source-type/web`, `#source-type/repo`, `#source-type/news` | Source summaries |
+| `#topic/` | `#topic/machine-learning`, `#topic/attention` | All articles (domain-specific) |
+
+Always include the `#type/` tag. Topic tags are in addition to the type tag.
+
+## Obsidian Callouts
+
+Use Obsidian callout syntax for visually distinct sections:
+
+- `> [!abstract]` — Article summary paragraph (at the top)
+- `> [!example]` — Key findings or notable data points
+- `> [!question]` — Open questions and unresolved issues
+- `> [!warning]` — Conflicting accounts or contradictions between sources
+- `> [!tip]` — Key insights or important takeaways
+
+## Embed Conventions
+
+Use embeds to transclude related content inline:
+- `![[Concept Name#Overview]]` — embed the Overview section of a related concept
+- Only embed in the `## See Also` section at the end of articles
+- Limit to 2-3 embeds per article to avoid clutter
+- Embeds render inline in Obsidian — the reader sees the content without navigating away
+
 ## Quality Standards
 
 - Every claim must be attributed to a source in the Evidence section
 - Contradictory claims from different sources should BOTH be preserved with attribution
 - Never delete information during a merge — only add, reorganize, or annotate
-- Use `## Open Questions` to flag uncertainties rather than omitting them
+- Use `> [!question]` callouts for Open Questions rather than plain headings
 - Summaries in `_index.md` must be under 150 characters

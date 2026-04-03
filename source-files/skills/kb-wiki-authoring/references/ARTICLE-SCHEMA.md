@@ -8,22 +8,17 @@ title: "Concept Name"
 type: concept
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-sources:
-  - "raw/web/source-file.md"
-  - "raw/papers/paper-file.md"
-tags:
-  - primary-tag
-  - secondary-tag
+sources: ["raw/web/source-file.md", "raw/papers/paper-file.md"]
+tags: [type/concept, confidence/high, topic/your-topic]
 category: "[[Category Name]]"
-aliases:
-  - "Alternative Name"
-  - "Abbreviation"
+aliases: ["Alternative Name", "Abbreviation"]
 confidence: high | medium | low
 ---
 
 # Concept Name
 
-One-paragraph summary of this concept. Should be self-contained and understandable without reading the full article.
+> [!abstract]
+> One-paragraph summary of this concept. Should be self-contained and understandable without reading the full article.
 
 ## Overview
 
@@ -31,25 +26,32 @@ Main explanation of the concept. Use [[wikilinks]] to related concepts. This sec
 
 ## Key Points
 
-- Important point with [[Related Concept]] links
-- Another key insight from the sources
-- Technical detail or specification
+> [!example] Key Findings
+> - Important point with [[Related Concept]] links
+> - Another key insight from the sources
+> - Technical detail or specification
 
 ## Evidence and Sources
 
 - From [[Source: Article Title]]: specific finding or claim
 - From [[Source: Paper Title]]: supporting data or quote
-- Conflicting view from [[Source: Other Article]]: alternative perspective
+
+> [!warning] Conflicting View
+> From [[Source: Other Article]]: alternative perspective that contradicts the above.
 
 ## Related Concepts
 
 - [[Related Concept 1]] — how it relates (e.g., "prerequisite", "builds on", "contrasts with")
 - [[Related Concept 2]] — relationship description
 
-## Open Questions
+> [!question] Open Questions
+> - Unresolved question about this concept
+> - Area where sources disagree or data is insufficient
 
-- Unresolved question about this concept
-- Area where sources disagree or data is insufficient
+## See Also
+
+![[Related Concept 1#Overview]]
+![[Related Concept 2#Overview]]
 ```
 
 ## Source Summary Article
@@ -66,22 +68,20 @@ source_type: web | paper | repo | note
 author: "Author Name"
 date_published: YYYY-MM-DD
 date_ingested: YYYY-MM-DD
-tags:
-  - source
-  - topic-tag
+tags: [type/source, source-type/web, topic/your-topic]
 ---
 
 # Source: Original Article Title
 
-## Summary
-
-Two to three paragraph summary of the source's main content and contribution.
+> [!abstract]
+> Two to three paragraph summary of the source's main content and contribution.
 
 ## Key Claims
 
-- Claim 1 — links to [[Relevant Concept]]
-- Claim 2 — links to [[Another Concept]]
-- Claim 3 with supporting data
+> [!example] Key Findings
+> - Claim 1 — links to [[Relevant Concept]]
+> - Claim 2 — links to [[Another Concept]]
+> - Claim 3 with supporting data
 
 ## Concepts Mentioned
 
@@ -90,6 +90,7 @@ Two to three paragraph summary of the source's main content and contribution.
 
 ## Notable Quotes and Data
 
+> [!quote]
 > Direct quote from the source if particularly important.
 
 - Key statistic or data point

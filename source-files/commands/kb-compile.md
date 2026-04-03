@@ -64,12 +64,19 @@ Incrementally compile new or modified raw sources into structured wiki articles.
    python "$HOME/.claude/scripts/kb_engine.py" stats --vault-path "<vault>"
    ```
 
-8. **Report** to the user:
+8. **Update concept map canvas**:
+   Read all concept articles, extract their wikilinks to other concepts, and regenerate `wiki/_concept-map.canvas` as a JSON Canvas file where:
+   - Each concept article is a `file` node pointing to `wiki/concepts/{slug}.md`
+   - Each wikilink between concepts is an edge
+   - Nodes are arranged in a grid layout (the user can rearrange in Obsidian)
+
+9. **Report** to the user:
    - Number of sources processed
    - New articles created
    - Existing articles updated (merged)
    - Any broken links found and fixed
    - Current wiki stats (article count, word count)
+   - Remind: open `_dashboards.md` in Obsidian for live Dataview views
 
 ## Important
 
@@ -77,4 +84,7 @@ Incrementally compile new or modified raw sources into structured wiki articles.
 - Always preserve existing article content during merges — never delete
 - Every claim must be attributed to its source
 - Use `[[wikilinks]]` consistently throughout all articles
+- Use Obsidian callouts (`> [!abstract]`, `> [!example]`, `> [!question]`, `> [!warning]`) for visual sections
+- Use structured tags (`type/concept`, `confidence/high`, `topic/x`) for Dataview filtering
+- Add `## See Also` with `![[Concept#Overview]]` embeds (2-3 max) for related concepts
 - Follow the article schema strictly (see `$kb-wiki-authoring` skill)
