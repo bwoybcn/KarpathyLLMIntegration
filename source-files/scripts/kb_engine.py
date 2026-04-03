@@ -338,15 +338,21 @@ def _find_broken_links(vault_path: Path) -> list[dict]:
     if not wiki_dir.is_dir():
         return []
 
-    # Build set of all wiki files (by stem, lowercased)
+    # Build set of all wiki files (by stem, lowercased, plus titles and aliases)
     known_files: set[str] = set()
     for f in wiki_dir.rglob("*.md"):
         known_files.add(f.stem.lower())
-        # Also add aliases from frontmatter
         text = f.read_text(encoding="utf-8", errors="replace")
         fm = parse_frontmatter(text)
+        # Add title from frontmatter
+        title = fm.get("title", "")
+        if title:
+            known_files.add(str(title).lower())
+            known_files.add(slugify(str(title)))
+        # Add aliases from frontmatter
         for alias in fm.get("aliases", []):
             if isinstance(alias, str):
+                known_files.add(alias.lower())
                 known_files.add(slugify(alias))
 
     # Scan all wiki files for wikilinks
@@ -360,6 +366,12 @@ def _find_broken_links(vault_path: Path) -> list[dict]:
             # Skip links to index files (they use special names)
             if target.startswith("_"):
                 continue
+            # Skip heading references (e.g., [[Concept#Overview]]) — Obsidian resolves these
+            if "#" in target:
+                base_target = target.split("#")[0].strip()
+                base_slug = slugify(base_target)
+                if base_slug in known_files or base_target.lower() in known_files:
+                    continue
             if target_slug not in known_files and target.lower() not in known_files:
                 broken.append({
                     "file": rel,
