@@ -441,6 +441,105 @@ def rebuild_index(vault_path: Path) -> None:
 
     index_path = wiki_dir / "_index.md"
     index_path.write_text("\n".join(lines), encoding="utf-8")
+
+    # ---- Rebuild _categories.md ----
+    cat_lines = [
+        "---", "title: Categories", "type: index",
+        f"updated: {now_date()}", "---", "", "# Categories", "",
+    ]
+    # Read each category file and list its members
+    cat_dir = wiki_dir / "categories"
+    if cat_dir.is_dir():
+        for cf in sorted(cat_dir.rglob("*.md")):
+            ct = cf.read_text(encoding="utf-8", errors="replace")
+            cfm = parse_frontmatter(ct)
+            cat_title = cfm.get("title", cf.stem.replace("-", " ").title())
+            cat_lines.append(f"## [[{cat_title}]]")
+            # Find concepts in this category
+            for e in entries:
+                if e["type"] == "concept":
+                    # Read the concept's category field
+                    cpath = wiki_dir / e["path"]
+                    if cpath.exists():
+                        ctext = cpath.read_text(encoding="utf-8", errors="replace")
+                        cfm2 = parse_frontmatter(ctext)
+                        concept_cat = cfm2.get("category", "")
+                        if isinstance(concept_cat, list):
+                            concept_cat = concept_cat[0] if concept_cat else ""
+                        if cat_title.lower() in str(concept_cat).lower():
+                            cat_lines.append(f"- [[{e['title']}]]")
+            cat_lines.append("")
+    if len(cat_lines) <= 8:
+        cat_lines.append("_No categories yet._")
+    (wiki_dir / "_categories.md").write_text("\n".join(cat_lines), encoding="utf-8")
+
+    # ---- Rebuild _backlinks.md ----
+    # Scan all wiki files for wikilinks and build reverse index
+    backlinks: dict[str, set[str]] = {}
+    all_titles: dict[str, str] = {}  # stem -> title
+    for subdir in ("concepts", "sources", "categories"):
+        d = wiki_dir / subdir
+        if not d.is_dir():
+            continue
+        for f in sorted(d.rglob("*.md")):
+            text = f.read_text(encoding="utf-8", errors="replace")
+            fm = parse_frontmatter(text)
+            source_title = fm.get("title", f.stem.replace("-", " ").title())
+            all_titles[f.stem.lower()] = source_title
+            for match in WIKILINK_RE.finditer(text):
+                target = match.group(1).strip()
+                if target.startswith("_"):
+                    continue
+                backlinks.setdefault(target, set()).add(source_title)
+
+    bl_lines = [
+        "---", "title: Backlinks", "type: index",
+        f"updated: {now_date()}", "---", "", "# Backlinks Index", "",
+    ]
+    for target in sorted(backlinks.keys()):
+        sources = sorted(backlinks[target] - {target})
+        if sources:
+            links_str = ", ".join(f"[[{s}]]" for s in sources)
+            bl_lines.append(f"## [[{target}]]")
+            bl_lines.append(f"Linked from: {links_str}")
+            bl_lines.append("")
+    if len(bl_lines) <= 8:
+        bl_lines.append("_No backlinks yet._")
+    (wiki_dir / "_backlinks.md").write_text("\n".join(bl_lines), encoding="utf-8")
+
+    # ---- Rebuild _glossary.md ----
+    glossary: dict[str, str] = {}
+    for subdir in ("concepts",):
+        d = wiki_dir / subdir
+        if not d.is_dir():
+            continue
+        for f in sorted(d.rglob("*.md")):
+            text = f.read_text(encoding="utf-8", errors="replace")
+            fm = parse_frontmatter(text)
+            title = fm.get("title", f.stem.replace("-", " ").title())
+            # Add the title itself
+            glossary[title] = title
+            # Add aliases
+            aliases = fm.get("aliases", [])
+            if isinstance(aliases, str):
+                aliases = [aliases]
+            for alias in aliases:
+                if alias and alias != title:
+                    glossary[str(alias)] = title
+
+    gl_lines = [
+        "---", "title: Glossary", "type: index",
+        f"updated: {now_date()}", "---", "", "# Glossary", "",
+        "| Term | Canonical Article |",
+        "|------|------------------|",
+    ]
+    for term in sorted(glossary.keys(), key=str.lower):
+        gl_lines.append(f"| {term} | [[{glossary[term]}]] |")
+    if len(gl_lines) <= 10:
+        gl_lines.append("")
+        gl_lines.append("_No terms yet._")
+    (wiki_dir / "_glossary.md").write_text("\n".join(gl_lines), encoding="utf-8")
+
     print(json.dumps({"articles": len(entries), "types": list(by_type.keys())}))
 
 
