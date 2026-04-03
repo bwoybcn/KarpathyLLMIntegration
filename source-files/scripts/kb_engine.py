@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 import sys
@@ -31,7 +32,7 @@ OUTPUT_SUBDIRS = ("reports", "slides", "charts")
 WIKILINK_RE = re.compile(r"\[\[([^\]|]+)(?:\|[^\]]+)?\]\]")
 FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n---\s*\n", re.DOTALL)
 
-DEFAULT_KB_ROOT = Path("D:/KnowledgeBases")
+DEFAULT_KB_ROOT = Path(os.environ.get("KB_ROOT", "D:/KnowledgeBases"))
 
 
 # ---------------------------------------------------------------------------
@@ -302,11 +303,10 @@ def hash_raw(vault_path: Path) -> None:
 # Validate links — find broken [[wikilinks]]
 # ---------------------------------------------------------------------------
 
-def validate_links(vault_path: Path) -> list[dict]:
-    """Find broken wikilinks in the wiki/ directory."""
+def _find_broken_links(vault_path: Path) -> list[dict]:
+    """Find broken wikilinks in the wiki/ directory (no stdout)."""
     wiki_dir = vault_path / "wiki"
     if not wiki_dir.is_dir():
-        print("[]")
         return []
 
     # Build set of all wiki files (by stem, lowercased)
@@ -338,6 +338,12 @@ def validate_links(vault_path: Path) -> list[dict]:
                     "line": text[:match.start()].count("\n") + 1,
                 })
 
+    return broken
+
+
+def validate_links(vault_path: Path) -> list[dict]:
+    """Find broken wikilinks in the wiki/ directory."""
+    broken = _find_broken_links(vault_path)
     print(json.dumps(broken, indent=2))
     return broken
 
@@ -432,7 +438,9 @@ def compute_stats(vault_path: Path) -> dict:
                 continue
             article_count += 1
             text = f.read_text(encoding="utf-8", errors="replace")
-            total_words += len(text.split())
+            # Strip frontmatter before counting words
+            body = FRONTMATTER_RE.sub("", text)
+            total_words += len(body.split())
             fm = parse_frontmatter(text)
             if fm.get("type") == "concept":
                 concepts += 1
@@ -442,18 +450,21 @@ def compute_stats(vault_path: Path) -> dict:
             if cat:
                 categories.add(cat.strip("[]\"'"))
 
-    # Check compilation state for uncompiled
+    # Check compilation state for uncompiled (new + modified)
     state = load_json(vault_path / VAULT_MARKER / "compilation-state.json")
-    compiled_sources = set(state.get("sources", {}).keys())
-    current_raw: set[str] = set()
+    compiled_sources = state.get("sources", {})
+    uncompiled = 0
     if raw_dir.is_dir():
         for f in raw_dir.rglob("*"):
             if f.is_file() and f.name != "_manifest.json":
-                current_raw.add(f.relative_to(vault_path).as_posix())
-    uncompiled = len(current_raw - compiled_sources)
+                rel = f.relative_to(vault_path).as_posix()
+                if rel not in compiled_sources:
+                    uncompiled += 1
+                elif compiled_sources[rel].get("hash") != file_hash(f):
+                    uncompiled += 1
 
     # Broken links
-    broken_links = len(validate_links.__wrapped__(vault_path)) if hasattr(validate_links, '__wrapped__') else 0
+    broken_links = len(_find_broken_links(vault_path))
 
     stats = {
         "raw_sources": raw_count,
@@ -463,6 +474,7 @@ def compute_stats(vault_path: Path) -> dict:
         "total_words": total_words,
         "categories": len(categories),
         "uncompiled_sources": uncompiled,
+        "broken_links": broken_links,
     }
 
     # Write stats.md
@@ -479,6 +491,7 @@ def compute_stats(vault_path: Path) -> dict:
         f"| Total words | {total_words:,} |\n"
         f"| Categories | {len(categories)} |\n"
         f"| Uncompiled sources | {uncompiled} |\n"
+        f"| Broken links | {broken_links} |\n"
     )
     (vault_path / VAULT_MARKER / "stats.md").write_text(stats_md, encoding="utf-8")
 

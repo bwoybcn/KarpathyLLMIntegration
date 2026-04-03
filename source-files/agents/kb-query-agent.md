@@ -33,10 +33,7 @@ Based on the question, select the most relevant articles to read. Consider:
 - Related concepts that might contain relevant information
 - Source summaries that might have primary data
 
-If the index doesn't surface obvious matches, use Grep to search across all wiki articles:
-```
-grep -r "search term" wiki/
-```
+If the index doesn't surface obvious matches, use the Grep tool to search across all wiki articles for relevant terms.
 
 ### Step 3: Read and Analyze
 

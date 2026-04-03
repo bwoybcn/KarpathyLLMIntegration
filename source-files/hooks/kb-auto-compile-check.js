@@ -47,9 +47,13 @@ function main() {
     process.exit(0);
   }
 
-  // Output a nudge message
+  // Output nudge in Claude Code hook protocol format
   const fileName = path.basename(filePath);
-  console.log(`New source "${fileName}" added to KB vault. Run /kb-compile to process it into the wiki.`);
+  const result = {
+    decision: "approve",
+    reason: `New source "${fileName}" added to KB vault. Run /kb-compile to process it into the wiki.`
+  };
+  console.log(JSON.stringify(result));
   process.exit(0);
 }
 

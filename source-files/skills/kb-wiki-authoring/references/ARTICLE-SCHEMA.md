@@ -133,7 +133,7 @@ Brief description of what this category covers.
 | `type` | Yes | all | `concept`, `source-summary`, or `category` |
 | `created` | Yes | all | Date first created (YYYY-MM-DD) |
 | `updated` | Yes | all | Date last modified (YYYY-MM-DD) |
-| `sources` | Yes | concept, source-summary | List of raw/ file paths that inform this article |
+| `sources` | Yes | concept | List of raw/ file paths that inform this article |
 | `tags` | Yes | all | Topic tags for filtering and discovery |
 | `category` | Yes | concept | Wikilink to the parent category |
 | `aliases` | No | concept | Alternative names for wikilink resolution |
