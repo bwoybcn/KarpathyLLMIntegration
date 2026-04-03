@@ -477,7 +477,11 @@ def compute_stats(vault_path: Path) -> dict:
                 source_summaries += 1
             cat = fm.get("category", "")
             if cat:
-                categories.add(cat.strip("[]\"'"))
+                if isinstance(cat, list):
+                    for c in cat:
+                        categories.add(str(c).strip("[]\"'"))
+                else:
+                    categories.add(str(cat).strip("[]\"'"))
 
     # Check compilation state for uncompiled (new + modified)
     state = load_json(vault_path / VAULT_MARKER / "compilation-state.json")
