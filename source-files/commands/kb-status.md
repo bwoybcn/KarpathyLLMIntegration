@@ -19,22 +19,13 @@ Show a summary of the knowledge base's current state.
    - Otherwise, run: `python "$HOME/.claude/scripts/kb_engine.py" detect --cwd "$PWD"`
    - If no vault specified or detected, list all vaults: `python "$HOME/.claude/scripts/kb_engine.py" list`
 
-2. **Gather statistics**:
+2. **Gather statistics** (includes uncompiled count and broken link count):
    ```bash
    python "$HOME/.claude/scripts/kb_engine.py" stats --vault-path "<vault>"
    ```
+   This single command returns all metrics including uncompiled sources and broken links.
 
-3. **Check for uncompiled sources**:
-   ```bash
-   python "$HOME/.claude/scripts/kb_engine.py" diff --vault-path "<vault>"
-   ```
-
-4. **Check for broken links**:
-   ```bash
-   python "$HOME/.claude/scripts/kb_engine.py" validate-links --vault-path "<vault>"
-   ```
-
-5. **Present a dashboard** to the user:
+3. **Present a dashboard** to the user:
 
    ```
    Knowledge Base: {topic}

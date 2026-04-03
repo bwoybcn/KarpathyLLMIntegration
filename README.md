@@ -96,8 +96,9 @@ D:\KnowledgeBases\{topic}\
 ├── scripts/kb_engine.py
 ├── skills/kb-wiki-authoring/
 ├── skills/kb-source-ingestion/
-├── commands/kb-{new,ingest,compile,query,lint,status,output}.md
-├── agents/kb-{compiler,query-agent,linter}.md
+├── skills/alphaxiv-paper-lookup/
+├── commands/kb-{new,research,ingest,compile,query,lint,expand,status,output}.md
+├── agents/kb-{compiler,query-agent,linter,researcher}.md
 ├── hooks/kb-auto-compile-check.js
 └── templates/kb-vault-template/
 ```

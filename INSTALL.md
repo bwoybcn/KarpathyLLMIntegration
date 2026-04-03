@@ -286,6 +286,7 @@ CLAUDE_HOME="$HOME/.claude"
 rm "$CLAUDE_HOME/scripts/kb_engine.py"
 rm -rf "$CLAUDE_HOME/skills/kb-wiki-authoring"
 rm -rf "$CLAUDE_HOME/skills/kb-source-ingestion"
+rm -rf "$CLAUDE_HOME/skills/alphaxiv-paper-lookup"
 rm "$CLAUDE_HOME/commands/kb-"*.md
 rm "$CLAUDE_HOME/agents/kb-"*.md
 rm "$CLAUDE_HOME/hooks/kb-auto-compile-check.js"

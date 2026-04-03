@@ -77,22 +77,51 @@ def save_json(path: Path, data: dict) -> None:
 
 
 def parse_frontmatter(text: str) -> dict[str, Any]:
-    """Parse YAML-like frontmatter into a dict (simple key: value only)."""
+    """Parse YAML-like frontmatter into a dict.
+
+    Handles single values, inline lists [a, b], and multi-line lists:
+      key:
+        - item1
+        - item2
+    """
     m = FRONTMATTER_RE.match(text)
     if not m:
         return {}
     result: dict[str, Any] = {}
+    current_key: Optional[str] = None
+    current_list: Optional[list] = None
     for line in m.group(1).splitlines():
-        if ":" in line:
+        stripped = line.strip()
+        # Multi-line list item
+        if stripped.startswith("- ") and current_key is not None and current_list is not None:
+            val = stripped[2:].strip().strip('"').strip("'")
+            current_list.append(val)
+            continue
+        # New key
+        if ":" in line and not line.startswith(" ") and not line.startswith("\t"):
+            # Flush previous multi-line list
+            if current_key and current_list is not None:
+                result[current_key] = current_list
             key, _, val = line.partition(":")
             key = key.strip()
             val = val.strip().strip('"').strip("'")
-            if val.startswith("[") and val.endswith("]"):
-                # Simple list parse
+            if val == "":
+                # Could be start of a multi-line list
+                current_key = key
+                current_list = []
+            elif val.startswith("[") and val.endswith("]"):
+                # Inline list
                 items = val[1:-1].split(",")
                 result[key] = [i.strip().strip('"').strip("'") for i in items if i.strip()]
+                current_key = None
+                current_list = None
             else:
                 result[key] = val
+                current_key = None
+                current_list = None
+    # Flush final multi-line list
+    if current_key and current_list is not None:
+        result[current_key] = current_list
     return result
 
 

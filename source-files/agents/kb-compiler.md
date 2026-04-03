@@ -135,3 +135,4 @@ For each category referenced:
 6. **Canonical names** — pick one name, list alternatives as `aliases`
 7. **Handle contradictions** — keep both claims with attribution, note in Open Questions
 8. **Be concise** — summaries under 150 chars for index entries
+9. **Inline YAML lists** — always write frontmatter lists in inline format: `tags: [a, b]`, `sources: ["path1", "path2"]`, `aliases: ["Name A"]`. Do not use multi-line `- item` list syntax in frontmatter.

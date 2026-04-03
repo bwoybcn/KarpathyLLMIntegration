@@ -106,7 +106,7 @@ Outputs are saved to `outputs/` and viewable in Obsidian.
 
 Reads the lint report's gaps, autonomously researches sources to fill them, and compiles the results. This is the "set it and forget it" command — run it periodically and the wiki grows itself.
 
-For continuous expansion, combine with loop mode:
+For continuous expansion, combine with Claude Code's `/loop` command (if available):
 ```
 /loop 30m /kb-expand --max_sources 3
 ```
