@@ -63,16 +63,19 @@ All files go under your Claude Code home directory (`~/.claude/`). On Windows th
 │       └── SKILL.md
 ├── commands/
 │   ├── kb-new.md
+│   ├── kb-research.md
 │   ├── kb-ingest.md
 │   ├── kb-compile.md
 │   ├── kb-query.md
 │   ├── kb-lint.md
+│   ├── kb-expand.md
 │   ├── kb-status.md
 │   └── kb-output.md
 ├── agents/
 │   ├── kb-compiler.md
 │   ├── kb-query-agent.md
-│   └── kb-linter.md
+│   ├── kb-linter.md
+│   └── kb-researcher.md
 ├── hooks/
 │   └── kb-auto-compile-check.js
 └── templates/

@@ -26,7 +26,19 @@ Open Obsidian → "Open folder as vault" → select `D:\KnowledgeBases\transform
 
 On first open, Obsidian will ask you to trust community plugins (Dataview, Marp Slides). Click "Trust" to enable them.
 
-### 3. Ingest some sources
+### 3. Let the system find sources for you
+
+```
+/kb-research "transformer architecture and attention mechanisms"
+```
+
+This autonomously searches the web, evaluates candidate sources for quality and relevance, and ingests the best 3-8 into your vault's `raw/` directory. You can also target specific source types:
+
+```
+/kb-research "attention mechanisms" --type academic
+```
+
+### 3b. Or manually ingest specific sources
 
 ```
 /kb-ingest https://jalammar.github.io/illustrated-transformer/
@@ -86,7 +98,20 @@ Finds broken links, missing cross-references, inconsistencies, and suggests new 
 
 Outputs are saved to `outputs/` and viewable in Obsidian.
 
-### 8. Check status
+### 8. Auto-expand the wiki
+
+```
+/kb-expand
+```
+
+Reads the lint report's gaps, autonomously researches sources to fill them, and compiles the results. This is the "set it and forget it" command — run it periodically and the wiki grows itself.
+
+For continuous expansion, combine with loop mode:
+```
+/loop 30m /kb-expand --max_sources 3
+```
+
+### 9. Check status
 
 ```
 /kb-status

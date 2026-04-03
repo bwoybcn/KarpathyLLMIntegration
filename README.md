@@ -7,8 +7,9 @@ Inspired by [Andrej Karpathy's approach](https://x.com/karpathy/status/203980565
 ## Architecture
 
 ```
-Sources → /kb-ingest → raw/ → /kb-compile → wiki/ → /kb-query, /kb-lint → outputs/
-                                                   ↑_____ filed back _____↓
+/kb-research → Sources → /kb-ingest → raw/ → /kb-compile → wiki/ → /kb-query, /kb-lint → outputs/
+    ↑                                                             ↑_____ filed back _____↓
+    └──────────────────── /kb-expand (auto-fill gaps) ────────────┘
 ```
 
 Each knowledge base is a standalone Obsidian vault at `D:\KnowledgeBases\{topic}\`.
@@ -18,10 +19,12 @@ Each knowledge base is a standalone Obsidian vault at `D:\KnowledgeBases\{topic}
 | Command | Description |
 |---------|-------------|
 | `/kb-new {topic}` | Create a new knowledge base vault |
-| `/kb-ingest {url\|path}` | Ingest a source (web article, PDF, paper, repo, note) |
+| `/kb-research {topic}` | Autonomously search the web, evaluate, and ingest sources |
+| `/kb-ingest {url\|path}` | Manually ingest a specific source |
 | `/kb-compile` | Compile raw sources into wiki articles with wikilinks |
 | `/kb-query {question}` | Ask a question against the wiki |
 | `/kb-lint` | Run health checks on the wiki |
+| `/kb-expand` | Auto-identify gaps and research sources to fill them |
 | `/kb-status` | Show vault statistics and health |
 | `/kb-output {format}` | Generate slides, reports, or charts from wiki content |
 
@@ -64,6 +67,7 @@ D:\KnowledgeBases\{topic}\
 | Agent | `kb-compiler` | Compiles raw sources into wiki articles |
 | Agent | `kb-query-agent` | Researches answers against the wiki |
 | Agent | `kb-linter` | Semantic health checks and improvement suggestions |
+| Agent | `kb-researcher` | Autonomously finds and ingests quality sources |
 | Hook | `kb-auto-compile-check.js` | Nudges to compile when files added to raw/ |
 
 ## Ingestion Tools
