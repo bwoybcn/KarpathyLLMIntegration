@@ -76,7 +76,12 @@ Each source is saved to `raw/` and you'll be nudged to compile.
 
 This reads all new sources, extracts concepts, creates wiki articles with `[[wikilinks]]`, and builds the index. It processes one source at a time for quality.
 
-After compilation, check the wiki in Obsidian — you'll see articles in `wiki/concepts/` and `wiki/sources/`, and the graph view will show the link structure.
+After compilation, check the wiki in Obsidian:
+- Articles in `wiki/concepts/` and `wiki/sources/` with callout-formatted sections
+- `wiki/_dashboards.md` — live Dataview dashboard showing article stats and gaps
+- `wiki/_concept-map.canvas` — visual concept relationship map
+- Graph view shows the full link structure, color-coded by folder
+- Tag pane shows structured `type/`, `confidence/`, `topic/` hierarchy
 
 ### 5. Ask questions
 

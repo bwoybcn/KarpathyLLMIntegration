@@ -46,7 +46,9 @@ D:\KnowledgeBases\{topic}\
 │   ├── _index.md       # Master index
 │   ├── _categories.md  # Category tree
 │   ├── _glossary.md    # Term → article mappings
-│   └── _backlinks.md   # Reverse link index
+│   ├── _backlinks.md   # Reverse link index
+│   ├── _dashboards.md  # Live Dataview queries (control panel)
+│   └── _concept-map.canvas  # Visual concept map
 ├── outputs/            # Generated deliverables
 │   ├── reports/        # Markdown reports
 │   ├── slides/         # Marp slide decks
@@ -90,6 +92,7 @@ D:\KnowledgeBases\{topic}\
 - **Explorations add up** — query outputs can be filed back into the wiki
 - **Works for any topic** — academic research, news stories, technical docs, general knowledge
 - **News-aware** — date range filtering, timeline articles, multi-perspective sourcing, event deduplication
+- **Obsidian-native** — callouts, Dataview dashboards, structured tags, Canvas concept maps, embeds
 
 ## File Locations
 

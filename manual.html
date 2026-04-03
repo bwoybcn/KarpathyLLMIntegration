@@ -789,6 +789,20 @@ date_end: 2025-07-04
 <h3>File query answers back</h3>
 <p>After <code>/kb-query</code>, you can ask to save the answer into the wiki. This means your own investigations make the knowledge base richer — exactly Karpathy's "explorations add up" principle.</p>
 
+<h3>Open the Dataview dashboard</h3>
+<p>After compiling, open <code>wiki/_dashboards.md</code> in Obsidian. It contains live Dataview queries that update automatically:</p>
+<ul>
+  <li>Articles grouped by type (concept, source, timeline)</li>
+  <li>High and low confidence articles</li>
+  <li>Recently updated articles</li>
+  <li>Articles with fewest sources (need more evidence)</li>
+  <li>Source summaries by type</li>
+  <li>Full tag distribution</li>
+</ul>
+
+<h3>Use the concept map canvas</h3>
+<p>Open <code>wiki/_concept-map.canvas</code> for a spatial, zoomable view of how concepts relate. Each concept is a node, each wikilink is an edge. You can drag nodes to rearrange the layout.</p>
+
 <h3>Use the Obsidian graph view</h3>
 <p>The vault is pre-configured with color-coded graph view:</p>
 <ul>
@@ -797,6 +811,25 @@ date_end: 2025-07-04
   <li><strong style="color: #d4a017;">Orange</strong> — categories</li>
   <li><strong style="color: #888;">Gray</strong> — raw sources</li>
   <li><strong style="color: #7c5cbf;">Purple</strong> — outputs</li>
+</ul>
+
+<h3>Callouts make articles scannable</h3>
+<p>Articles use Obsidian's callout syntax for visual scanning:</p>
+<ul>
+  <li><strong>Abstract</strong> (blue) — article summary at the top</li>
+  <li><strong>Example</strong> (green) — key findings and data points</li>
+  <li><strong>Question</strong> (orange) — open questions and uncertainties</li>
+  <li><strong>Warning</strong> (red) — contradictions between sources</li>
+  <li><strong>Quote</strong> — notable quotes from sources</li>
+</ul>
+
+<h3>Structured tags for filtering</h3>
+<p>Tags use a hierarchical format visible in Obsidian's tag pane:</p>
+<ul>
+  <li><code>#type/concept</code>, <code>#type/source</code>, <code>#type/timeline</code></li>
+  <li><code>#confidence/high</code>, <code>#confidence/medium</code>, <code>#confidence/low</code></li>
+  <li><code>#source-type/paper</code>, <code>#source-type/web</code>, <code>#source-type/news</code></li>
+  <li><code>#topic/your-domain</code> — custom topic tags</li>
 </ul>
 
 <h3>Multiple vaults for different topics</h3>
