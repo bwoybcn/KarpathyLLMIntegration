@@ -1,0 +1,99 @@
+# LLM Knowledge Base System
+
+A Karpathy-style LLM knowledge base system built on Claude Code and Obsidian. Raw sources (articles, papers, repos, notes) are ingested, compiled by an LLM into a structured markdown wiki with `[[wikilinks]]`, then queried, linted, and enhanced over time — all viewable in Obsidian.
+
+Inspired by [Andrej Karpathy's approach](https://x.com/karpathy/status/2039805659525644595) to using LLMs for personal knowledge bases.
+
+## Architecture
+
+```
+Sources → /kb-ingest → raw/ → /kb-compile → wiki/ → /kb-query, /kb-lint → outputs/
+                                                   ↑_____ filed back _____↓
+```
+
+Each knowledge base is a standalone Obsidian vault at `D:\KnowledgeBases\{topic}\`.
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `/kb-new {topic}` | Create a new knowledge base vault |
+| `/kb-ingest {url\|path}` | Ingest a source (web article, PDF, paper, repo, note) |
+| `/kb-compile` | Compile raw sources into wiki articles with wikilinks |
+| `/kb-query {question}` | Ask a question against the wiki |
+| `/kb-lint` | Run health checks on the wiki |
+| `/kb-status` | Show vault statistics and health |
+| `/kb-output {format}` | Generate slides, reports, or charts from wiki content |
+
+## Vault Structure
+
+```
+D:\KnowledgeBases\{topic}\
+├── .obsidian/          # Pre-configured (Dataview, Marp, Graph View)
+├── AGENTS.md           # Claude Code rules for this vault
+├── raw/                # Source documents
+│   ├── web/            # Web articles (via defuddle)
+│   ├── papers/         # PDFs/papers (via MarkItDown, Zotero)
+│   ├── repos/          # Repo documentation
+│   └── notes/          # Personal notes
+├── wiki/               # LLM-compiled knowledge articles
+│   ├── concepts/       # One article per concept
+│   ├── sources/        # Per-source summaries
+│   ├── categories/     # Category index pages
+│   ├── _index.md       # Master index
+│   ├── _categories.md  # Category tree
+│   ├── _glossary.md    # Term → article mappings
+│   └── _backlinks.md   # Reverse link index
+├── outputs/            # Generated deliverables
+│   ├── reports/        # Markdown reports
+│   ├── slides/         # Marp slide decks
+│   └── charts/         # Matplotlib visualizations
+└── _meta/              # Compilation state & metadata
+    ├── compilation-state.json
+    ├── stats.md
+    └── lint-report.md
+```
+
+## Components
+
+| Type | Name | Purpose |
+|------|------|---------|
+| Script | `kb_engine.py` | Deterministic operations (init, diff, validate, stats) |
+| Skill | `kb-wiki-authoring` | Article schema, merge strategy, index maintenance |
+| Skill | `kb-source-ingestion` | Source type detection and conversion patterns |
+| Agent | `kb-compiler` | Compiles raw sources into wiki articles |
+| Agent | `kb-query-agent` | Researches answers against the wiki |
+| Agent | `kb-linter` | Semantic health checks and improvement suggestions |
+| Hook | `kb-auto-compile-check.js` | Nudges to compile when files added to raw/ |
+
+## Ingestion Tools
+
+| Source Type | Tool | Destination |
+|-------------|------|-------------|
+| Web articles | Defuddle CLI | `raw/web/` |
+| arXiv papers | AlphaXiv (structured overview) | `raw/papers/` |
+| PDFs, DOCX, PPTX | MarkItDown MCP | `raw/papers/` |
+| Academic papers | Zotero MCP | `raw/papers/` |
+| GitHub repos | Defuddle / clone | `raw/repos/` |
+| Markdown notes | File copy | `raw/notes/` |
+
+## Key Principles
+
+- **LLM writes the wiki** — you rarely edit articles manually
+- **Incremental compilation** — only new/modified sources are processed
+- **Never delete** — merges add information, contradictions are preserved with attribution
+- **Everything linked** — `[[wikilinks]]` throughout, viewable in Obsidian's graph view
+- **Explorations add up** — query outputs can be filed back into the wiki
+
+## File Locations
+
+```
+~/.claude/
+├── scripts/kb_engine.py
+├── skills/kb-wiki-authoring/
+├── skills/kb-source-ingestion/
+├── commands/kb-{new,ingest,compile,query,lint,status,output}.md
+├── agents/kb-{compiler,query-agent,linter}.md
+├── hooks/kb-auto-compile-check.js
+└── templates/kb-vault-template/
+```
