@@ -70,7 +70,18 @@ Incrementally compile new or modified raw sources into structured wiki articles.
    - Each wikilink between concepts is an edge
    - Nodes are arranged in a grid layout (the user can rearrange in Obsidian)
 
-9. **Report** to the user:
+9. **Log the compilation** — append a dated entry to `_meta/compilation-log.md`:
+   ```markdown
+   ## {date} — Compilation
+   - Sources processed: {count}
+   - New articles created: {count} ({list})
+   - Articles merged: {count} ({list})
+   - Broken links fixed: {count}
+   - Wiki stats: {article count} articles, {word count} words
+   ```
+   Create the file if it doesn't exist. Always append, never overwrite.
+
+10. **Report** to the user:
    - Number of sources processed
    - New articles created
    - Existing articles updated (merged)

@@ -89,7 +89,7 @@ D:\KnowledgeBases\{topic}\
 - **Incremental compilation** — only new/modified sources are processed
 - **Never delete** — merges add information, contradictions are preserved with attribution
 - **Everything linked** — `[[wikilinks]]` throughout, viewable in Obsidian's graph view
-- **Explorations add up** — query outputs can be filed back into the wiki
+- **Explorations add up** — query answers auto-saved, all operations logged to `_meta/`
 - **Works for any topic** — academic research, news stories, technical docs, general knowledge
 - **News-aware** — date range filtering, timeline articles, multi-perspective sourcing, event deduplication
 - **Obsidian-native** — callouts, Dataview dashboards, structured tags, Canvas concept maps, embeds

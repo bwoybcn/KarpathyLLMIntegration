@@ -62,7 +62,17 @@ Search the web for high-quality sources on a topic and ingest them into the vaul
    - List of skipped sources with reasons
    - Suggest running `/kb-compile` to process them
 
-6. **Optionally auto-compile**: If the user wants, immediately run `/kb-compile` to process the new sources into wiki articles.
+6. **Log the research** — append a dated entry to `_meta/research-log.md`:
+   ```markdown
+   ## {date} — {topic}
+   - Type: {type}, Date range: {date_range or "none"}
+   - Ingested: {count} sources
+   - {list of ingested sources with quality ratings}
+   - Skipped: {count} ({reasons})
+   ```
+   Create the file if it doesn't exist. Always append, never overwrite.
+
+7. **Optionally auto-compile**: If the user wants, immediately run `/kb-compile` to process the new sources into wiki articles.
 
 ## Examples
 

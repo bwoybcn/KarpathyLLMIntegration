@@ -43,7 +43,19 @@ Identify gaps in the wiki and autonomously research sources to fill them.
    python "$HOME/.claude/scripts/kb_engine.py" stats --vault-path "<vault>"
    ```
 
-6. **Report** what was expanded:
+6. **Log the expansion** — append a dated entry to `_meta/expansion-log.md`:
+   ```markdown
+   ## {date} — Expansion
+   - Gaps targeted: {list}
+   - Sources ingested: {count}
+   - Articles created: {count}
+   - Articles merged: {count}
+   - Before: {article count} articles, {word count} words
+   - After: {article count} articles, {word count} words
+   ```
+   Create the file if it doesn't exist. Always append, never overwrite.
+
+7. **Report** what was expanded:
    ```
    Wiki expanded:
    - Researched 3 gap topics

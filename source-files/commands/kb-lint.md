@@ -40,7 +40,14 @@ Run structural and semantic health checks on the wiki.
    - Add missing backlinks
    - Fix frontmatter issues
 
-5. **Write lint report** to `_meta/lint-report.md`
+5. **Write lint report** to `_meta/lint-report.md` AND **append** a dated summary to `_meta/lint-history.md`:
+   ```markdown
+   ## {date}
+   - Critical: {count}, Warnings: {count}, Suggestions: {count}
+   - Broken links: {count}
+   - Top issue: {description}
+   ```
+   Create `lint-history.md` if it doesn't exist. Always append, never overwrite. The full report goes to `lint-report.md` (overwritten each time for current state), while the history file tracks trends.
 
 6. **Present summary** to the user:
    - Critical issues count

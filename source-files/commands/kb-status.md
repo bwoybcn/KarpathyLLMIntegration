@@ -25,7 +25,13 @@ Show a summary of the knowledge base's current state.
    ```
    This single command returns all metrics including uncompiled sources and broken links.
 
-3. **Present a dashboard** to the user:
+3. **Append to stats history** — append a one-line snapshot to `_meta/stats-history.md`:
+   ```markdown
+   | {date} | {articles} | {words} | {sources} | {uncompiled} | {broken links} |
+   ```
+   Create the file with a table header if it doesn't exist. This builds a growth timeline viewable in Obsidian.
+
+4. **Present a dashboard** to the user:
 
    ```
    Knowledge Base: {topic}
