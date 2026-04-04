@@ -52,11 +52,23 @@ Write a clear, well-structured answer that:
 - Identifies gaps: "The wiki doesn't currently cover X"
 - Suggests follow-up questions if relevant
 
-### Step 5: Optionally File the Answer
+### Step 5: Always Save the Answer
 
-If the user requests it or the answer is substantial enough to be useful later:
-- Save as `outputs/reports/{slug}.md` with frontmatter
-- The answer can then be filed back into the wiki to enhance it
+Every query answer MUST be saved to the vault — explorations add up:
+- Save as `outputs/reports/{question-slug}.md`
+- Include frontmatter:
+  ```yaml
+  ---
+  title: "Q: {question}"
+  type: query-report
+  created: {today}
+  question: "{question}"
+  sources_consulted: [{list of wiki articles read}]
+  tags: [type/query, topic/{relevant topic}]
+  ---
+  ```
+- Include the full answer, citations, gaps, and follow-ups
+- These reports are browsable in Obsidian and feed into future `/kb-expand` cycles
 
 ## Answer Format
 

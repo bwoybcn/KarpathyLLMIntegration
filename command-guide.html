@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KB Commands — Quick Reference</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #181a22;
+    --surface-2: #1f2230;
+    --border: #2a2d3a;
+    --text: #e4e4e7;
+    --text-dim: #8b8d98;
+    --accent: #6c8cff;
+    --accent-glow: rgba(108, 140, 255, 0.12);
+    --green: #3dd68c;
+    --amber: #f5a623;
+    --coral: #f07068;
+    --violet: #a78bfa;
+    --teal: #2dd4bf;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Geist', -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--bg);
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 40px 80px;
+  }
+
+  /* Header */
+  .hero {
+    text-align: center;
+    padding: 60px 0 50px;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    background: var(--accent-glow);
+    padding: 6px 18px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 48px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+
+  .hero h1 em {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .hero p {
+    font-size: 16px;
+    color: var(--text-dim);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* Pipeline */
+  .pipeline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 40px 0 50px;
+    flex-wrap: wrap;
+  }
+
+  .pipe-node {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+
+  .pipe-node.blue { background: rgba(108,140,255,0.15); color: var(--accent); border: 1px solid rgba(108,140,255,0.25); }
+  .pipe-node.green { background: rgba(61,214,140,0.1); color: var(--green); border: 1px solid rgba(61,214,140,0.2); }
+  .pipe-node.amber { background: rgba(245,166,35,0.1); color: var(--amber); border: 1px solid rgba(245,166,35,0.2); }
+  .pipe-node.coral { background: rgba(240,112,104,0.1); color: var(--coral); border: 1px solid rgba(240,112,104,0.2); }
+  .pipe-node.violet { background: rgba(167,139,250,0.1); color: var(--violet); border: 1px solid rgba(167,139,250,0.2); }
+  .pipe-node.teal { background: rgba(45,212,191,0.1); color: var(--teal); border: 1px solid rgba(45,212,191,0.2); }
+
+  .pipe-arrow {
+    color: var(--border);
+    font-size: 18px;
+    user-select: none;
+  }
+
+  /* Command cards */
+  .cmd {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .cmd:hover {
+    border-color: var(--accent);
+  }
+
+  .cmd-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 24px 16px;
+  }
+
+  .cmd-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .cmd-icon.blue { background: rgba(108,140,255,0.15); }
+  .cmd-icon.green { background: rgba(61,214,140,0.1); }
+  .cmd-icon.amber { background: rgba(245,166,35,0.1); }
+  .cmd-icon.coral { background: rgba(240,112,104,0.1); }
+  .cmd-icon.violet { background: rgba(167,139,250,0.1); }
+  .cmd-icon.teal { background: rgba(45,212,191,0.1); }
+
+  .cmd-title {
+    font-family: 'Geist Mono', monospace;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .cmd-subtitle {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .cmd-body {
+    padding: 0 24px 22px;
+  }
+
+  .cmd-desc {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-bottom: 16px;
+    line-height: 1.7;
+  }
+
+  .cmd-example {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+
+  .cmd-example .dim { color: var(--text-dim); }
+
+  /* Args table */
+  .args {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 13px;
+  }
+
+  .args th {
+    text-align: left;
+    font-weight: 500;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .args td {
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(42,45,58,0.5);
+    vertical-align: top;
+  }
+
+  .args code {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    background: var(--surface-2);
+    color: var(--accent);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .args .optional {
+    color: var(--text-dim);
+    font-size: 11px;
+    font-style: italic;
+  }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-right: 4px;
+  }
+
+  .tag.create { background: rgba(61,214,140,0.12); color: var(--green); }
+  .tag.research { background: rgba(108,140,255,0.12); color: var(--accent); }
+  .tag.compile { background: rgba(167,139,250,0.12); color: var(--violet); }
+  .tag.query { background: rgba(245,166,35,0.12); color: var(--amber); }
+  .tag.maintain { background: rgba(240,112,104,0.12); color: var(--coral); }
+  .tag.output { background: rgba(45,212,191,0.12); color: var(--teal); }
+
+  /* Section headers */
+  .section-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 50px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* How it works */
+  .flow-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    margin: 30px 0;
+  }
+
+  .flow-section h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+
+  .flow-steps {
+    list-style: none;
+    counter-reset: flow;
+  }
+
+  .flow-steps li {
+    counter-increment: flow;
+    padding-left: 36px;
+    position: relative;
+    margin-bottom: 14px;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  .flow-steps li::before {
+    content: counter(flow);
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .flow-steps li strong { color: var(--text); font-weight: 500; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 30px 20px 60px; }
+    .hero h1 { font-size: 32px; }
+    .pipeline { gap: 4px; }
+    .pipe-node { font-size: 10px; padding: 6px 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">Command Reference</div>
+    <h1>The <em>/kb</em> Commands</h1>
+    <p>Nine commands that take you from raw sources to a structured, queryable knowledge base in Obsidian.</p>
+  </div>
+
+  <!-- Pipeline -->
+  <div class="pipeline">
+    <div class="pipe-node green">/kb-new</div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-node blue">/kb-research</div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-node violet">/kb-compile</div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-node amber">/kb-query</div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-node coral">/kb-lint</div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-node teal">/kb-expand</div>
+  </div>
+
+  <!-- SETUP -->
+  <div class="section-label">Setup</div>
+
+  <div class="cmd">
+    <div class="cmd-header">
+      <div class="cmd-icon green">+</div>
+      <div>
+        <div class="cmd-title">/kb-new</div>
+        <div class="cmd-subtitle"><span class="tag create">CREATE</span> Create a new knowledge base vault</div>
+      </div>
+    </div>
+    <div class="cmd-body">
+      <p class="cmd-desc">Creates a pre-configured Obsidian vault with the full directory structure, graph view colors, Dataview dashboards, and empty indexes. Each topic gets its own vault.</p>
+      <div class="cmd-example">/kb-new <span class="dim">"Transformer Architecture"</span></div>
+      <table class="args">
+        <thead><tr><th>Argument</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>topic</code></td><td>Name for the knowledge base. Gets slugified for the filesystem.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- INGEST -->
+  <div class="section-label">Ingestion</div>
+
+  <div class="cmd">
+    <div class="cmd-header">
+      <div class="cmd-icon blue">&#x1F50D;</div>
+      <div>
+        <div class="cmd-title">/kb-research</div>
+        <div class="cmd-subtitle"><span class="tag research">RESEARCH</span> Autonomously find and ingest sources</div>
+      </div>
+    </div>
+    <div class="cmd-body">
+      <p class="cmd-desc">Searches the web for high-quality sources on a topic, evaluates them for quality and relevance, and ingests the best ones into the vault. Supports academic, web, repo, and news modes with optional date filtering.</p>
+      <div class="cmd-example">/kb-research <span class="dim">"attention mechanisms"</span> --type academic</div>
+      <div class="cmd-example">/kb-research <span class="dim">"UK election"</span> --type news --date_range <span class="dim">"2025-06-01 to 2025-07-31"</span></div>
+      <table class="args">
+        <thead><tr><th>Argument</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>topic</code></td><td>What to research.</td></tr>
+          <tr><td><code>--type</code> <span class="optional">optional</span></td><td><code>any</code> | <code>academic</code> | <code>web</code> | <code>repos</code> | <code>news</code>. Default: any.</td></tr>
+          <tr><td><code>--date_range</code> <span class="optional">optional</span></td><td>Date filter, e.g. <code>"2025-01-01 to 2025-12-31"</code> or <code>"last 30 days"</code>.</td></tr>
+          <tr><td><code>--max_sources</code> <span class="optional">optional</span></td><td>Max sources to ingest. Default: 5.</td></tr>
+          <tr><td><code>--vault</code> <span class="optional">optional</span></td><td>Vault name or path. Auto-detected from CWD.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cmd">
+    <div class="cmd-header">
+      <div class="cmd-icon blue">&#x1F4E5;</div>
+      <div>
+        <div class="cmd-title">/kb-ingest</div>
+        <div class="cmd-subtitle"><span class="tag research">INGEST</span> Manually add a specific source</div>
+      </div>
+    </div>
+    <div class="cmd-body">
+      <p class="cmd-desc">Ingest a specific URL, file, or paper into the vault. Automatically detects the source type and uses the right extraction tool: defuddle for web, AlphaXiv for arXiv papers, MarkItDown for PDFs, Zotero for academic papers.</p>
+      <div class="cmd-example">/kb-ingest <span class="dim">https://arxiv.org/abs/1706.03762</span></div>
+      <div class="cmd-example">/kb-ingest <span class="dim">D:\papers\my-paper.pdf</span></div>
+      <table class="args">
+        <thead><tr><th>Argument</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>source</code></td><td>URL, file path, or Zotero item key.</td></tr>
+          <tr><td><code>--vault</code> <span class="optional">optional</span></td><td>Vault name or path. Auto-detected from CWD.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- COMPILE -->
+  <div class="section-label">Compilation</div>
+
+  <div class="cmd">
+    <div class="cmd-header">
+      <div class="cmd-icon violet">&#x2699;</div>
+      <div>
+        <div class="cmd-title">/kb-compile</div>
+        <div class="cmd-subtitle"><span class="tag compile">COMPILE</span> Build the wiki from raw sources</div>
+      </div>
+    </div>
+    <div class="cmd-body">
+      <p class="cmd-desc">The core engine. Reads each new or modified source, extracts concepts, creates wiki articles with <code>[[wikilinks]]</code>, and merges new information into existing articles. Rebuilds all indexes, validates links, and updates the concept map canvas.</p>
+
+      <div class="flow-section">
+        <h3>What happens when you compile</h3>
+        <ol class="flow-steps">
+          <li><strong>Diff detection</strong> — finds new or modified files in <code>raw/</code></li>
+          <li><strong>Per-source processing</strong> — extracts concepts, creates source summaries, creates or merges concept articles</li>
+          <li><strong>Index rebuild</strong> — regenerates <code>_index.md</code>, <code>_categories.md</code>, <code>_glossary.md</code>, <code>_backlinks.md</code></li>
+          <li><strong>Link validation</strong> — checks all <code>[[wikilinks]]</code> resolve correctly</li>
+          <li><strong>Canvas update</strong> — regenerates the concept relationship map</li>
+          <li><strong>Stats update</strong> — recalculates article count, word count, health metrics</li>
+        </ol>
+      </div>
+
+      <div class="cmd-example">/kb-compile</div>
+      <div class="cmd-example">/kb-compile <span class="dim">--source raw/web/specific-article.md</span></div>
+      <table class="args">
+        <thead><tr><th>Argument</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>--source</code> <span class="optional">optional</span></td><td>Compile only this specific raw file. Compiles all new sources if omitted.</td></tr>
+          <tr><td><code>--vault</code> <span class="optional">optional</span></td><td>Vault name or path. Auto-detected from CWD.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- QUERY -->
+  <div class="section-label">Query &amp; Output</div>
+
+  <div class="cmd">
+    <div class="cmd-header">
+      <div class="cmd-icon amber">?</div>
+      <div>
+        <div class="cmd-title">/kb-query</div>
+        <div class="cmd-subtitle"><span class="tag query">QUERY</span> Ask questions against the wiki</div>
+      </div>
+    </div>
+    <div class="cmd-body">
+      <p class="cmd-desc">Researches your question by reading the wiki index, identifying relevant articles, and synthesizing an answer with <code>[[wikilink]]</code> citations. Answers are automatically saved to <code>outputs/reports/</code> so every query enriches the vault.</p>
+      <div class="cmd-example">/kb-query <span class="dim">"How does multi-head attention differ from single-head?"</span></div>
+      <table class="args">
+        <thead><tr><th>Argument</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>question</code></td><td>The question to research.</td></tr>
+          <tr><td><code>--vault</code> <span class="optional">optional</span></td><td>Vault name or path.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cmd">
+    <div class="cmd-header">
+      <div class="cmd-icon teal">&#x1F4CA;</div>
+      <div>
+        <div class="cmd-title">/kb-output</div>
+        <div class="cmd-subtitle"><span class="tag output">OUTPUT</span> Generate deliverables from the wiki</div>
+      </div>
+    </div>
+    <div class="cmd-body">
+      <p class="cmd-desc">Generates formatted outputs from wiki content. Slide decks use Marp format (viewable in Obsidian with the Marp plugin), charts use matplotlib, and reports are long-form markdown with citations.</p>
+      <div class="cmd-example">/kb-output slides <span class="dim">"Overview of Attention Mechanisms"</span></div>
+      <div class="cmd-example">/kb-output report <span class="dim">"Comparison of TNE delivery models"</span></div>
+      <table class="args">
+        <thead><tr><th>Argument</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>format</code></td><td><code>slides</code> | <code>report</code> | <code>chart</code> | <code>summary</code></td></tr>
+          <tr><td><code>topic</code> <span class="optional">optional</span></td><td>What to generate output about.</td></tr>
+          <tr><td><code>--vault</code> <span class="optional">optional</span></td><td>Vault name or path.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- MAINTAIN -->
+  <div class="section-label">Maintenance</div>
+
+  <div class="cmd">
+    <div class="cmd-header">
+      <div class="cmd-icon coral">&#x1F50E;</div>
+      <div>
+        <div class="cmd-title">/kb-lint</div>
+        <div class="cmd-subtitle"><span class="tag maintain">MAINTAIN</span> Health checks and quality audit</div>
+      </div>
+    </div>
+    <div class="cmd-body">
+      <p class="cmd-desc">Runs structural checks (broken wikilinks, orphan articles, frontmatter validation) and semantic checks (inconsistencies, missing cross-references, coverage gaps). Writes a lint report to <code>_meta/lint-report.md</code> viewable in Obsidian.</p>
+      <div class="cmd-example">/kb-lint</div>
+      <div class="cmd-example">/kb-lint <span class="dim">--fix true</span></div>
+      <table class="args">
+        <thead><tr><th>Argument</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>--fix</code> <span class="optional">optional</span></td><td>Auto-fix structural issues (create stubs for broken links, fix frontmatter). Default: false.</td></tr>
+          <tr><td><code>--vault</code> <span class="optional">optional</span></td><td>Vault name or path.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cmd">
+    <div class="cmd-header">
+      <div class="cmd-icon teal">&#x1F331;</div>
+      <div>
+        <div class="cmd-title">/kb-expand</div>
+        <div class="cmd-subtitle"><span class="tag output">GROW</span> Auto-fill knowledge gaps</div>
+      </div>
+    </div>
+    <div class="cmd-body">
+      <p class="cmd-desc">The autonomous growth engine. Reads the lint report's gaps and suggestions, researches sources to fill them, compiles the results, and reports what grew. Combines <code>/kb-lint</code> &rarr; <code>/kb-research</code> &rarr; <code>/kb-compile</code> in one command. Can target a specific topic or let the system choose based on gaps.</p>
+      <div class="cmd-example">/kb-expand</div>
+      <div class="cmd-example">/kb-expand <span class="dim">"China as a market for Russell Group"</span></div>
+      <table class="args">
+        <thead><tr><th>Argument</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>--max_sources</code> <span class="optional">optional</span></td><td>Total source budget across all gaps. Default: 10.</td></tr>
+          <tr><td><code>--vault</code> <span class="optional">optional</span></td><td>Vault name or path.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cmd">
+    <div class="cmd-header">
+      <div class="cmd-icon green">&#x1F4CB;</div>
+      <div>
+        <div class="cmd-title">/kb-status</div>
+        <div class="cmd-subtitle"><span class="tag create">STATUS</span> Dashboard and health summary</div>
+      </div>
+    </div>
+    <div class="cmd-body">
+      <p class="cmd-desc">Shows a quick dashboard of the vault's current state: article count, word count, source count, categories, uncompiled sources, and broken links. Suggests next actions based on the health metrics.</p>
+      <div class="cmd-example">/kb-status</div>
+      <div class="cmd-example">/kb-status <span class="dim">--vault transnational-education</span></div>
+    </div>
+  </div>
+
+  <!-- Typical workflow -->
+  <div class="section-label">Typical Workflow</div>
+
+  <div class="flow-section">
+    <h3>From zero to a living knowledge base</h3>
+    <ol class="flow-steps">
+      <li><strong>/kb-new</strong> "Your Topic" &mdash; create the vault</li>
+      <li><strong>/kb-research</strong> "your topic" &mdash; AI finds and ingests 5 sources</li>
+      <li><strong>/kb-compile</strong> &mdash; builds the wiki with wikilinks and callouts</li>
+      <li><strong>/kb-query</strong> "your question" &mdash; get answers with citations</li>
+      <li><strong>/kb-lint</strong> &mdash; find gaps and issues</li>
+      <li><strong>/kb-expand</strong> &mdash; auto-fill the gaps, wiki grows</li>
+      <li>Repeat 4&ndash;6 &mdash; the wiki gets richer with every cycle</li>
+    </ol>
+  </div>
+
+  <div class="footer">
+    LLM Knowledge Base System &mdash; <a href="https://github.com/bwoybcn/KarpathyLLMIntegration">github.com/bwoybcn/KarpathyLLMIntegration</a><br>
+    Built with Claude Code. Inspired by Andrej Karpathy.
+  </div>
+
+</div>
+</body>
+</html>

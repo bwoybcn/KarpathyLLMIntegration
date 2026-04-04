@@ -156,7 +156,7 @@ Over time, the wiki grows richer and more interconnected.
 
 ### Filing outputs back
 
-After a `/kb-query` or `/kb-output`, you can file the results back into the wiki as new articles. This is Karpathy's "explorations add up" principle — your questions and investigations enhance the knowledge base.
+Every `/kb-query` answer is automatically saved to `outputs/reports/` in the vault. Your questions and investigations always enhance the knowledge base — Karpathy's "explorations add up" principle, built in by default.
 
 ### Source priorities
 

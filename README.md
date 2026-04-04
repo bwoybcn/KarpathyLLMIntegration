@@ -22,7 +22,7 @@ Each knowledge base is a standalone Obsidian vault at `D:\KnowledgeBases\{topic}
 | `/kb-research {topic}` | Autonomously search the web, evaluate, and ingest sources. Supports `--type news` and `--date_range` |
 | `/kb-ingest {url\|path}` | Manually ingest a specific source |
 | `/kb-compile` | Compile raw sources into wiki articles with wikilinks |
-| `/kb-query {question}` | Ask a question against the wiki |
+| `/kb-query {question}` | Ask a question against the wiki (answer auto-saved to vault) |
 | `/kb-lint` | Run health checks on the wiki |
 | `/kb-expand` | Auto-identify gaps and research sources to fill them |
 | `/kb-status` | Show vault statistics and health |
