@@ -26,6 +26,7 @@ VAULT_MARKER = "_meta"
 TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "templates" / "kb-vault-template"
 
 RAW_SUBDIRS = ("web", "papers", "repos", "notes")
+RAW_IGNORE_FILES = {"_manifest.json", ".gitkeep", ".DS_Store", "Thumbs.db"}
 WIKI_SUBDIRS = ("concepts", "sources", "categories")
 OUTPUT_SUBDIRS = ("reports", "slides", "charts")
 
@@ -273,7 +274,7 @@ def diff_sources(vault_path: Path) -> DiffResult:
     raw_dir = vault_path / "raw"
     if raw_dir.is_dir():
         for f in raw_dir.rglob("*"):
-            if f.is_file() and f.name != "_manifest.json":
+            if f.is_file() and f.name not in RAW_IGNORE_FILES:
                 rel = f.relative_to(vault_path).as_posix()
                 h = file_hash(f)
                 current_files[rel] = h
@@ -312,7 +313,7 @@ def hash_raw(vault_path: Path) -> None:
     updated = 0
     if raw_dir.is_dir():
         for f in raw_dir.rglob("*"):
-            if f.is_file() and f.name != "_manifest.json":
+            if f.is_file() and f.name not in RAW_IGNORE_FILES:
                 rel = f.relative_to(vault_path).as_posix()
                 h = file_hash(f)
                 if rel not in sources:
@@ -394,9 +395,17 @@ def validate_links(vault_path: Path) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 def rebuild_index(vault_path: Path) -> None:
-    """Regenerate wiki/_index.md from all wiki articles."""
+    """Regenerate all four index files in a single pass over wiki articles."""
     wiki_dir = vault_path / "wiki"
+
+    # --- Single pass: read every article once, collect all metadata ---
     entries: list[dict] = []
+    # For _categories.md: concept_title -> category_name
+    concept_categories: dict[str, str] = {}
+    # For _backlinks.md: target -> set of source titles
+    backlinks: dict[str, set[str]] = {}
+    # For _glossary.md: term -> canonical title
+    glossary: dict[str, str] = {}
 
     for subdir in ("concepts", "sources", "categories"):
         d = wiki_dir / subdir
@@ -407,103 +416,71 @@ def rebuild_index(vault_path: Path) -> None:
             fm = parse_frontmatter(text)
             title = fm.get("title", f.stem.replace("-", " ").title())
             art_type = fm.get("type", subdir.rstrip("s"))
-            # Extract first paragraph as summary
+
+            # Index entry (summary)
             body = FRONTMATTER_RE.sub("", text).strip()
             first_para = body.split("\n\n")[0] if body else ""
-            # Clean markdown from summary
             summary = re.sub(r"[#*_\[\]]", "", first_para).strip()
             if len(summary) > 150:
                 summary = summary[:147] + "..."
-
             rel = f.relative_to(wiki_dir).as_posix()
-            entries.append({
-                "title": title,
-                "type": art_type,
-                "path": rel,
-                "summary": summary,
-            })
+            entries.append({"title": title, "type": art_type, "path": rel, "summary": summary})
 
-    # Write _index.md
+            # Category membership (for concepts)
+            if art_type == "concept":
+                cat = fm.get("category", "")
+                if isinstance(cat, list):
+                    cat = cat[0] if cat else ""
+                if cat:
+                    concept_categories[title] = str(cat)
+                # Glossary: add title + aliases
+                glossary[title] = title
+                for alias in fm.get("aliases", []):
+                    if isinstance(alias, str) and alias and alias != title:
+                        glossary[alias] = title
+
+            # Backlinks: scan wikilinks
+            for match in WIKILINK_RE.finditer(text):
+                target = match.group(1).strip()
+                if not target.startswith("_"):
+                    backlinks.setdefault(target, set()).add(title)
+
+    # --- Write _index.md ---
     topic = vault_path.name.replace("-", " ").title()
-    lines = [
-        "---",
-        "title: Master Index",
-        "type: index",
-        f"updated: {now_date()}",
-        "---",
-        "",
-        f"# {topic} — Master Index",
-        "",
-        f"**{len(entries)} articles**",
-        "",
-    ]
-
-    # Group by type
     by_type: dict[str, list[dict]] = {}
     for e in entries:
         by_type.setdefault(e["type"], []).append(e)
-
+    idx_lines = [
+        "---", "title: Master Index", "type: index",
+        f"updated: {now_date()}", "---", "",
+        f"# {topic} — Master Index", "", f"**{len(entries)} articles**", "",
+    ]
     for art_type, items in sorted(by_type.items()):
-        lines.append(f"## {art_type.title()}s")
-        lines.append("")
+        idx_lines.append(f"## {art_type.title()}s")
+        idx_lines.append("")
         for item in items:
-            link = f"[[{item['title']}]]"
-            lines.append(f"- {link} — {item['summary']}")
-        lines.append("")
+            idx_lines.append(f"- [[{item['title']}]] — {item['summary']}")
+        idx_lines.append("")
+    (wiki_dir / "_index.md").write_text("\n".join(idx_lines), encoding="utf-8")
 
-    index_path = wiki_dir / "_index.md"
-    index_path.write_text("\n".join(lines), encoding="utf-8")
-
-    # ---- Rebuild _categories.md ----
+    # --- Write _categories.md ---
     cat_lines = [
         "---", "title: Categories", "type: index",
         f"updated: {now_date()}", "---", "", "# Categories", "",
     ]
-    # Read each category file and list its members
-    cat_dir = wiki_dir / "categories"
-    if cat_dir.is_dir():
-        for cf in sorted(cat_dir.rglob("*.md")):
-            ct = cf.read_text(encoding="utf-8", errors="replace")
-            cfm = parse_frontmatter(ct)
-            cat_title = cfm.get("title", cf.stem.replace("-", " ").title())
-            cat_lines.append(f"## [[{cat_title}]]")
-            # Find concepts in this category
-            for e in entries:
-                if e["type"] == "concept":
-                    # Read the concept's category field
-                    cpath = wiki_dir / e["path"]
-                    if cpath.exists():
-                        ctext = cpath.read_text(encoding="utf-8", errors="replace")
-                        cfm2 = parse_frontmatter(ctext)
-                        concept_cat = cfm2.get("category", "")
-                        if isinstance(concept_cat, list):
-                            concept_cat = concept_cat[0] if concept_cat else ""
-                        if cat_title.lower() in str(concept_cat).lower():
-                            cat_lines.append(f"- [[{e['title']}]]")
-            cat_lines.append("")
-    if len(cat_lines) <= 8:
+    # Get category titles from entries
+    cat_titles = [e["title"] for e in entries if e["type"] == "category"]
+    for cat_title in sorted(cat_titles):
+        cat_lines.append(f"## [[{cat_title}]]")
+        for concept_title, concept_cat in sorted(concept_categories.items()):
+            if cat_title.lower() in concept_cat.lower():
+                cat_lines.append(f"- [[{concept_title}]]")
+        cat_lines.append("")
+    if not cat_titles:
         cat_lines.append("_No categories yet._")
     (wiki_dir / "_categories.md").write_text("\n".join(cat_lines), encoding="utf-8")
 
-    # ---- Rebuild _backlinks.md ----
-    # Scan all wiki files for wikilinks and build reverse index
-    backlinks: dict[str, set[str]] = {}
-    all_titles: dict[str, str] = {}  # stem -> title
-    for subdir in ("concepts", "sources", "categories"):
-        d = wiki_dir / subdir
-        if not d.is_dir():
-            continue
-        for f in sorted(d.rglob("*.md")):
-            text = f.read_text(encoding="utf-8", errors="replace")
-            fm = parse_frontmatter(text)
-            source_title = fm.get("title", f.stem.replace("-", " ").title())
-            all_titles[f.stem.lower()] = source_title
-            for match in WIKILINK_RE.finditer(text):
-                target = match.group(1).strip()
-                if target.startswith("_"):
-                    continue
-                backlinks.setdefault(target, set()).add(source_title)
-
+    # --- Write _backlinks.md ---
     bl_lines = [
         "---", "title: Backlinks", "type: index",
         f"updated: {now_date()}", "---", "", "# Backlinks Index", "",
@@ -519,26 +496,7 @@ def rebuild_index(vault_path: Path) -> None:
         bl_lines.append("_No backlinks yet._")
     (wiki_dir / "_backlinks.md").write_text("\n".join(bl_lines), encoding="utf-8")
 
-    # ---- Rebuild _glossary.md ----
-    glossary: dict[str, str] = {}
-    for subdir in ("concepts",):
-        d = wiki_dir / subdir
-        if not d.is_dir():
-            continue
-        for f in sorted(d.rglob("*.md")):
-            text = f.read_text(encoding="utf-8", errors="replace")
-            fm = parse_frontmatter(text)
-            title = fm.get("title", f.stem.replace("-", " ").title())
-            # Add the title itself
-            glossary[title] = title
-            # Add aliases
-            aliases = fm.get("aliases", [])
-            if isinstance(aliases, str):
-                aliases = [aliases]
-            for alias in aliases:
-                if alias and alias != title:
-                    glossary[str(alias)] = title
-
+    # --- Write _glossary.md ---
     gl_lines = [
         "---", "title: Glossary", "type: index",
         f"updated: {now_date()}", "---", "", "# Glossary", "",
@@ -564,7 +522,7 @@ def compute_stats(vault_path: Path) -> dict:
     wiki_dir = vault_path / "wiki"
     raw_dir = vault_path / "raw"
 
-    raw_count = sum(1 for f in raw_dir.rglob("*") if f.is_file() and f.name != "_manifest.json") if raw_dir.is_dir() else 0
+    raw_count = sum(1 for f in raw_dir.rglob("*") if f.is_file() and f.name not in RAW_IGNORE_FILES) if raw_dir.is_dir() else 0
 
     article_count = 0
     total_words = 0
@@ -600,7 +558,7 @@ def compute_stats(vault_path: Path) -> dict:
     uncompiled = 0
     if raw_dir.is_dir():
         for f in raw_dir.rglob("*"):
-            if f.is_file() and f.name != "_manifest.json":
+            if f.is_file() and f.name not in RAW_IGNORE_FILES:
                 rel = f.relative_to(vault_path).as_posix()
                 if rel not in compiled_sources:
                     uncompiled += 1

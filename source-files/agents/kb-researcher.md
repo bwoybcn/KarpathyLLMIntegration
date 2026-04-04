@@ -20,9 +20,16 @@ Given a research topic/question and a vault path, you:
 
 ## Process
 
-### Step 1: Understand the Current Wiki
+### Step 1: Understand What Exists
 
-Read `wiki/_index.md` to understand what topics are already covered. If `_meta/lint-report.md` exists, check its "Data Gaps" section for known gaps. This prevents ingesting redundant sources.
+**Check the wiki**: Read `wiki/_index.md` to understand what topics are already covered. If `_meta/lint-report.md` exists, check its "Data Gaps" section for known gaps.
+
+**Check previous research**: If `_meta/research-log.md` exists, read it to see what was already searched and which URLs were skipped or ingested. Avoid re-searching the same queries or re-evaluating URLs already processed.
+
+**Check for duplicate URLs**: Scan the frontmatter of existing files in `raw/` for `source_url` fields. Before ingesting any new source, verify its URL isn't already in `raw/`. Use Grep:
+```
+Grep for the domain/path in raw/ to check for duplicates
+```
 
 ### Step 2: Search Strategy
 
