@@ -24,7 +24,7 @@ This creates a vault at `D:\KnowledgeBases\transformer-architecture\` with the f
 
 Open Obsidian → "Open folder as vault" → select `D:\KnowledgeBases\transformer-architecture\`.
 
-On first open, Obsidian will ask you to trust community plugins (Dataview, Marp Slides). Click "Trust" to enable them.
+On first open, Obsidian will ask you to trust community plugins (Dataview, Marp Slides, Terminal). Click "Trust" to enable them. The Terminal plugin lets you run `claude` and `/kb-*` commands directly inside Obsidian.
 
 ### 3. Let the system find sources for you
 
