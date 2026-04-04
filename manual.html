@@ -900,6 +900,47 @@ date_end: 2025-07-04
   </tbody>
 </table>
 
+<!-- SECTION: SHARING -->
+<div class="page-break"></div>
+<h2><span class="num">10</span>Sharing Vaults at Work</h2>
+<p class="section-intro">Knowledge bases are just folders of markdown files. Here's how to share them with colleagues.</p>
+
+<table>
+  <thead><tr><th>Method</th><th>Best for</th><th>Obsidian needed?</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>SharePoint / OneDrive sync</strong></td>
+      <td>Easiest option. Sync the vault folder so colleagues can open it in Obsidian. You maintain the wiki, they browse it.</td>
+      <td>Yes (free)</td>
+    </tr>
+    <tr>
+      <td><strong>Quartz static site</strong></td>
+      <td>Generate a website from the vault with working links and graph view. Host on SharePoint or any internal server. Free.</td>
+      <td>No (browser)</td>
+    </tr>
+    <tr>
+      <td><strong>Obsidian Publish</strong></td>
+      <td>Hosted wiki with full Obsidian features. Beautiful but $8/month and data leaves your org.</td>
+      <td>No (browser)</td>
+    </tr>
+    <tr>
+      <td><strong>Share specific outputs</strong></td>
+      <td>Use <code>/kb-output report</code> to generate polished reports, then share via Teams or email. Vault stays private.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><strong>Git repo (Azure DevOps)</strong></td>
+      <td>Version-controlled sharing for technical teams. Proper merge handling if multiple people contribute.</td>
+      <td>Yes (free)</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout callout-tip">
+  <div class="callout-title">Recommended for M365 environments</div>
+  <p>Put the vault in a shared OneDrive or SharePoint document library. You run the <code>/kb-*</code> commands. Colleagues install Obsidian (free) and open the synced folder as a vault. They get full graph view, callouts, Dataview dashboards, and search. If they want to contribute sources, they drop files into <code>raw/</code> and you compile.</p>
+</div>
+
 <div class="manual-footer">
   LLM Knowledge Base System &mdash; github.com/bwoybcn/KarpathyLLMIntegration<br>
   Built with Claude Code. Inspired by Andrej Karpathy.
