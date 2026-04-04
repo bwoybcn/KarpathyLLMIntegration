@@ -56,7 +56,12 @@ D:\KnowledgeBases\{topic}\
 └── _meta/              # Compilation state & metadata
     ├── compilation-state.json
     ├── stats.md
-    └── lint-report.md
+    ├── lint-report.md
+    ├── research-log.md     # Append-only research history
+    ├── compilation-log.md  # Append-only compile history
+    ├── lint-history.md     # Lint trends over time
+    ├── expansion-log.md    # Expansion history
+    └── stats-history.md    # Timestamped growth table
 ```
 
 ## Components

@@ -580,6 +580,25 @@
     </div>
   </div>
 
+  <!-- Logging -->
+  <div class="section-label">Automatic Logging</div>
+
+  <div class="flow-section">
+    <h3>Every operation leaves a trace</h3>
+    <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 16px;">All logs are append-only markdown files in <code>_meta/</code>, viewable in Obsidian. The vault records not just what you know, but how you built that knowledge.</p>
+    <table class="args" style="margin: 0;">
+      <thead><tr><th>Command</th><th>Logs to</th><th>What's recorded</th></tr></thead>
+      <tbody>
+        <tr><td><code>/kb-research</code></td><td><code>_meta/research-log.md</code></td><td>Searches run, sources ingested, sources skipped with reasons</td></tr>
+        <tr><td><code>/kb-compile</code></td><td><code>_meta/compilation-log.md</code></td><td>Sources processed, articles created and merged, wiki stats</td></tr>
+        <tr><td><code>/kb-lint</code></td><td><code>_meta/lint-history.md</code></td><td>Issue counts over time (critical, warnings, suggestions)</td></tr>
+        <tr><td><code>/kb-expand</code></td><td><code>_meta/expansion-log.md</code></td><td>Gaps targeted, before/after article and word counts</td></tr>
+        <tr><td><code>/kb-status</code></td><td><code>_meta/stats-history.md</code></td><td>Timestamped snapshot: articles, words, sources, broken links</td></tr>
+        <tr><td><code>/kb-query</code></td><td><code>outputs/reports/</code></td><td>Full answer with citations, gaps identified, follow-ups</td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <!-- Typical workflow -->
   <div class="section-label">Typical Workflow</div>
 
