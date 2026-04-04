@@ -1,6 +1,6 @@
 {
   "collapse-filter": true,
-  "search": "",
+  "search": "-file:_index -file:_backlinks -file:_glossary -file:_categories -file:_dashboards -file:AGENTS -path:_meta -path:raw",
   "showTags": true,
   "showAttachments": false,
   "hideUnresolved": false,
